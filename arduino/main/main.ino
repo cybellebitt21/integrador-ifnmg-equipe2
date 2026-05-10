@@ -3,7 +3,7 @@
 #define SENSOR_PIN A0
 #define LDR_SENSOR A1
 #define DHTPIN 2
-#define DHTTYPE DHT12
+#define DHTTYPE DHT22
 
 DHT dht(DHTPIN, DHTTYPE);
 
