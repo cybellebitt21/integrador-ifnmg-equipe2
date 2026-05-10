@@ -1,8 +1,9 @@
 #include "DHT.h"
 
 #define SENSOR_PIN A0
+#define LDR_SENSOR A1
 #define DHTPIN 2
-#define DHTTYPE DHT22
+#define DHTTYPE DHT12
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -10,29 +11,36 @@ void setup() {
   Serial.begin(115200);
   dht.begin();
   pinMode(SENSOR_PIN, INPUT);
+  pinMode(LDR_SENSOR, INPUT);
 }
 
 void loop() {
-  // Sensor requer intervalo de leitura mínimo de 2 segundos
-  delay(2000);
+  delay(2000);  // Intervalo necessário para o DHT
 
-  float umidade = dht.readHumidity();
+  // Leitura LDR
+  int leituraLDR = analogRead(LDR_SENSOR);  // Leitura bruta
+  int luminosidade = map(leituraLDR, 0, 1023, 0, 100);
+
+  // Leitura DHT
+  float umidadeAr = dht.readHumidity();
   float temperatura = dht.readTemperature();
 
-  // if (isnan(umidade) || isnan(temperatura)) {
-  //   Serial.println(F("Falha na leitura do sensor DHT22"));
-  //   return;
-  // }
+  // Leitura Umidade do Solo
+  int leituraSolo = analogRead(SENSOR_PIN);
+  int umidadeSolo = map(leituraSolo, 1023, 0, 0, 100);
 
-  unsigned int sensorValor = analogRead(SENSOR_PIN);
-  // converte intervalo de 10 bits (0 a  1023) para porcentagem proporcional
-  unsigned int umidadeSolo = (sensorValor * 100UL) / 1023;
-  // Unsigned long (UL) é usado na multiplicação para prevenir estouro de inteiro
-  // pois 1023 * 100 > 16 bits
+  // Tratamento de erro simples para o DHT
+  if (isnan(umidadeAr) || isnan(temperatura)) {
+    umidadeAr = 0;
+    temperatura = 0;
+  }
 
+  // Saída para o gateway
   Serial.print(umidadeSolo);
   Serial.print(",");
-  Serial.print(umidade);
+  Serial.print(umidadeAr);
   Serial.print(",");
-  Serial.println(temperatura);
+  Serial.print(temperatura);
+  Serial.print(",");
+  Serial.println(luminosidade);
 }
