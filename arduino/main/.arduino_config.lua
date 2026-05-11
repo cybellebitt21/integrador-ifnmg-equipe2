@@ -1,5 +1,5 @@
-local M = {}
-M.board = 'arduino:avr:uno'
-M.port = '/dev/ttyUSB0'
-M.baudrate =115200
-return M
+return {
+  board = "arduino:avr:mega",
+  port = "/dev/ttyACM0",
+  baudrate = "115200",
+}
