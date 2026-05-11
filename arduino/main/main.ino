@@ -1,8 +1,8 @@
 #include "DHT.h"
 
-#define SENSOR_PIN A0
+#define SOLO_SENSOR A0
 #define LDR_SENSOR A1
-#define DHTPIN 2
+#define DHTPIN 3
 #define DHTTYPE DHT22
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -10,7 +10,7 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(115200);
   dht.begin();
-  pinMode(SENSOR_PIN, INPUT);
+  pinMode(SOLO_SENSOR, INPUT);
   pinMode(LDR_SENSOR, INPUT);
 }
 
@@ -26,7 +26,7 @@ void loop() {
   float temperatura = dht.readTemperature();
 
   // Leitura Umidade do Solo
-  unsigned int leituraSolo = analogRead(SENSOR_PIN);
+  unsigned int leituraSolo = analogRead(SOLO_SENSOR);
   unsigned int umidadeSolo = map(leituraSolo, 1023, 0, 0, 100);
 
   // Tratamento de erro simples para o DHT
