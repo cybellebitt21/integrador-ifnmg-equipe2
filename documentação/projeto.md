@@ -57,7 +57,7 @@ Desenvolver um sistema IoT de monitoramento climático capaz de coletar, transmi
 # Tecnologias Envolvidas
 
 - Arduino Mega 2560
-- Sensores ambientais
+- Sensores ambientais: Sensor De Umidade E Temperatura Am2302 Dht22, Sensor Umidade Solo Arduino Montimport HW-080 e Sensor de Luminosidade LDR - Genérico
 - Gateway serial USB
 - API REST
 - Banco de dados
