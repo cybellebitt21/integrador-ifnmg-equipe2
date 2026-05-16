@@ -61,4 +61,4 @@ Este documento apresenta a modelagem conceitual inicial do banco de dados do sis
 
 # Diagrama Entidade-Relacionamento (DER)
 
-![DER AgroSensor](./diagramas/der-agrosensor.png)
+![DER AgroSensor](./diagramas/der-agrosensor.png.png)
