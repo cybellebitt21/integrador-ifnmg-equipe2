@@ -48,3 +48,11 @@ Este documento apresenta a modelagem conceitual inicial do banco de dados do sis
 - Um usuário pode visualizar várias leituras ambientais.
 - Um sensor pode gerar várias leituras.
 - As leituras ambientais são armazenadas no sistema para consulta e análise.
+  
+---
+
+## Sensores Utilizados no Projeto
+
+- DHT22 — Temperatura e Umidade do Ar
+- HW-080 — Umidade do Solo
+- LDR — Luminosidade
