@@ -9,6 +9,7 @@ O AgroSensor é um sistema de monitoramento climático voltado para agricultura 
 # Requisitos Funcionais (RF)
 
 | Código | Descrição |
+|---|---|
 | RF01 | O sistema deve registrar leituras dos sensores ambientais |
 | RF02 | O sistema deve exibir temperatura ambiente |
 | RF03 | O sistema deve exibir umidade do ar |
@@ -18,11 +19,13 @@ O AgroSensor é um sistema de monitoramento climático voltado para agricultura 
 | RF07 | O usuário deve conseguir visualizar os dados em dashboard |
 | RF08 | O sistema deve permitir cadastro de usuários |
 | RF09 | O sistema deve permitir login e logout |
+
 ---
 
 # Requisitos Não Funcionais (RNF)
 
 | Código | Descrição |
+|---|---|
 | RNF01 | O sistema deve utilizar comunicação serial USB |
 | RNF02 | O sistema deve utilizar Arduino Mega 2560 |
 | RNF03 | O backend deve utilizar arquitetura em camadas |
