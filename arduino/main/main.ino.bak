@@ -1,0 +1,31 @@
+// ------------ Código para simular o gateway de forma autonôma ------------
+void setup() {
+  Serial.begin(115200);
+  // Inicializa o gerador de números aleatórios com ruído do pino analógico A5
+  randomSeed(analogRead(A5));
+}
+
+void loop() {
+  delay(2000);  // Mantém o intervalo de 2 segundos entre os envios
+
+  // Simulação de Umidade do Solo: valores entre 20% e 85%
+  unsigned int umidadeSolo = random(20, 86);
+
+  // Simulação de Umidade do Ar: valores float entre 40.0% e 70.0%
+  // random(400, 701) gera inteiros de 400 a 700; dividindo por 10.0 vira float de uma casa decimal
+  float umidadeAr = random(400, 701) / 10.0;
+
+  // Simulação de Temperatura: valores float entre 21.0°C e 34.0°C
+  float temperatura = random(210, 341) / 10.0;
+
+  // Simulação de Luminosidade (LDR): valores entre 10% e 95%
+  unsigned int luminosidade = random(10, 96);
+
+  Serial.print(umidadeSolo);
+  Serial.print(F(","));
+  Serial.print(umidadeAr);
+  Serial.print(F(","));
+  Serial.print(temperatura);
+  Serial.print(F(","));
+  Serial.println(luminosidade);
+}
