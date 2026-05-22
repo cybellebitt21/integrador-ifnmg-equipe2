@@ -49,8 +49,6 @@ Desenvolver um sistema IoT de monitoramento climático capaz de coletar, transmi
 - Desenvolver um gateway para envio das informações ao backend;
 - Criar uma API REST para gerenciamento dos dados;
 - Desenvolver dashboards para visualização dos dados climáticos;
-- Auxiliar no monitoramento da irrigação e condições ambientais da plantação;
-- Contribuir para o uso racional da água na agricultura familiar.
 
 ---
 
