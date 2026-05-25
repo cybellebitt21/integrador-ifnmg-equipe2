@@ -1,7 +1,7 @@
 import { SerialPort } from 'serialport';
 import { ReadlineParser } from '@serialport/parser-readline';
 
-const caminhoPortaSerial = '/dev/ttyACM0';
+const caminhoPortaSerial = '/dev/ttyUSB0';
 const urlBackend = 'http://localhost:3000/api/leitura-sensores';
 
 // Inicializa a conexão com a porta serial configurando o caminho e a taxa de transmissão
@@ -15,14 +15,14 @@ const parser = serialPort.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
 // Executa a função assíncrona sempre que uma linha completa é recebida da porta serial
 parser.on('data', async (linha) => {
-  const partes = linha.trim().split(',');
+  const dadosSegmentados = linha.trim().split(',');
 
-  if (partes.length === 4) { // Verifica se a divisão gerou exatamente 4 elementos
+  if (dadosSegmentados.length === 4) { // Verifica se a divisão feita por split gerou exatamente 4 elementos
     const dadosSensor = {
-      umidadeSolo: parseInt(partes[0], 10),
-      umidadeAr: parseFloat(partes[1]),
-      temperatura: parseFloat(partes[2]),
-      luminosidade: parseInt(partes[3], 10),
+      umidadeSolo: parseInt(dadosSegmentados[0], 10),
+      umidadeAr: parseFloat(dadosSegmentados[1]),
+      temperatura: parseFloat(dadosSegmentados[2]),
+      luminosidade: parseInt(dadosSegmentados[3], 10),
     };
 
     // Validação basica para evitar  NaN no payload JSON
@@ -30,6 +30,10 @@ parser.on('data', async (linha) => {
       !isNaN(dadosSensor.umidadeAr) &&
       !isNaN(dadosSensor.temperatura) &&
       !isNaN(dadosSensor.luminosidade)) {
+
+      // Para log independente do server.js
+      // console.log('Payload gerado para envio:', dadosSensor);
+      // ou nc -l 3000 no terminal
 
       try {
         await fetch(urlBackend, {
