@@ -3,14 +3,10 @@
 
 datasource db {
   provider = "sqlite"
-  // No Prisma 7, a string de conexão física não fica mais aqui.
-  // Ela é lida dinamicamente pelo arquivo prisma.config.ts através do .env
 }
 
 generator client {
   provider = "prisma-client-js"
-  // No Prisma 7, o output customizado foi removido. Os tipos são injetados 
-  // automaticamente dentro de node_modules/@prisma/client/ de forma padrão.
 }
 
 model Usuario {
@@ -47,7 +43,6 @@ model Sensor {
   unidade   String
   criado_em DateTime @default(now())
 
-  // O catálogo agora guarda apenas os metadados de engenharia do hardware puro.
   plantacoes PlantacaoSensor[]
 }
 
@@ -58,7 +53,6 @@ model PlantacaoSensor {
   sensor_id    Int
   ativo        Boolean @default(true)
 
-  // MIGRAÇÃO REALIZADA: Os limites agora pertencem ao contexto do cultivo e não ao hardware estático
   limite_atencao Float
   limite_critico Float
 
