@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  telefone  String
+  criado_em DateTime @default(now())
+
+  plantacoes Plantacao[]
+  alertas    Alerta[]
+}
+
+model Plantacao {
+  id                   Int       @id @default(autoincrement())
+  usuario_id           Int
+  nome                 String
+  tipo                 String
+  data_inicio          DateTime
+  data_colheita        DateTime?
+  data_proximo_plantio DateTime?
+  descricao            String?
+  criado_em            DateTime  @default(now())
+
+  usuario  Usuario           @relation(fields: [usuario_id], references: [id])
+  sensores PlantacaoSensor[]
+}
+
+model Sensor {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  tipo      String
+  unidade   String
+  criado_em DateTime @default(now())
+
+  plantacoes PlantacaoSensor[]
+}
+
+// Entidade Associativa que vincula o Sensor à Plantação e define as regras de negócio customizadas do plantio
+model PlantacaoSensor {
+  id           Int     @id @default(autoincrement())
+  plantacao_id Int
+  sensor_id    Int
+  ativo        Boolean @default(true)
+
+  limite_atencao Float
+  limite_critico Float
+
+  plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
+  sensor    Sensor    @relation(fields: [sensor_id], references: [id])
+  leituras  Leitura[]
+
+  @@unique([plantacao_id, sensor_id])
+}
+
+model Leitura {
+  id                  Int      @id @default(autoincrement())
+  plantacao_sensor_id Int
+  valor               Float
+  data_hora           DateTime @default(now())
+
+  vinculo_sensor PlantacaoSensor @relation(fields: [plantacao_sensor_id], references: [id])
+  alertas        Alerta[]
+}
+
+model Alerta {
+  id          Int      @id @default(autoincrement())
+  leitura_id  Int
+  usuario_id  Int
+  tipo        String
+  mensagem    String
+  notificacao Boolean  @default(false)
+  gerado_em   DateTime @default(now())
+
+  leitura Leitura @relation(fields: [leitura_id], references: [id])
+  usuario Usuario @relation(fields: [usuario_id], references: [id])
+}

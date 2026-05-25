@@ -5,9 +5,17 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "tsx watch server.js"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "@prisma/adapter-libsql": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3"
   }
 }
