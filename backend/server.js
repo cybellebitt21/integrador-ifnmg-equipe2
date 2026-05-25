@@ -23,7 +23,10 @@ app.get('/api/leitura-sensores', (req, res) => {
 app.post('/api/leitura-sensores', (req, res) => {
   const { temperatura, umidadeAr, umidadeSolo, luminosidade } = req.body;
 
-  if (temperatura !== undefined && umidadeAr !== undefined && umidadeSolo !== undefined && luminosidade !== undefined) {
+  if (temperatura !== undefined &&
+    umidadeAr !== undefined &&
+    umidadeSolo !== undefined &&
+    luminosidade !== undefined) {
     dadosSensor = {
       temperatura,
       umidadeAr,
