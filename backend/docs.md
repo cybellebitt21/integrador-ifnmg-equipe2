@@ -25,12 +25,12 @@ Arquivos `.env` contêm configurações locais e ficam fora do repositório por 
 
 **Linux / MacOS**
 ```bash
-echo 'DATABASE_URL="file:./dev.db"' > .env
+echo 'DATABASE_URL="file:./prisma/dev.db"' > .env
 ```
 
 **Windows (CMD)**
 ```DOS
-echo DATABASE_URL="file:./dev.db">.env
+echo DATABASE_URL="file:./prisma/dev.db">.env
 ```
 
 ## 3. Configurar o Banco de Dados Local (SQLite)
@@ -49,11 +49,17 @@ Para garantir que o ORM reconheça os modelos de dados e forneça o autocompleta
 npx prisma generate
 ```
 
-## 5. Popular o Banco de Dados (Seed)
+## 5. Popular o Banco de Dados (Seeds)
 Para não testar com o banco vazio, execute o script de seed para injetar os dados fictícios de sensores (umidade, temperatura, etc.) para testes locais:
 
 ```bash
 npx prisma db seed
+```
+
+** ⚠️População de Alta Performance (Carga Massiva):** Insere um volume massivo de dados históricos lineares simulando 3 meses de telemetria contínua. Ideal para testar o carregamento dos gráficos, paginação e o estresse de requisições no dashboard.
+
+```bash
+npm run db-perf
 ```
 
 ## 6. Visualizar o Banco de Dados no Navegador (Prisma Studio)
