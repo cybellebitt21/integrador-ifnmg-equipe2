@@ -24,7 +24,7 @@ O AgroSensor é um sistema de monitoramento climático voltado para agricultura 
 | RF13 | O usuário deve visualizar gráficos diários, semanais e mensais dos dados coletados por sensor |
 | RF14 | O usuário deve poder visualizar o histórico completo de alertas recebidos |
 | RF16 | O sistema deve suportar o cadastro de novos tipos de sensores sem necessidade de alteração estrutural |
-
+| RF17 | O usuário deve poder visualizar a lista de dispositivos e sensores disponíveis no momento do cadastro de uma plantação |
 ---
 
 ## Requisitos Não Funcionais
