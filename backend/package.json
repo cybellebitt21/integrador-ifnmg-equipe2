@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "tsx watch server.js"
+    "dev": "tsx watch server.js",
+    "db-perf": "tsx prisma/seed-performance.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.3",

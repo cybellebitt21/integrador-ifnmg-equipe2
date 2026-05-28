@@ -21,9 +21,22 @@ model Usuario {
   alertas    Alerta[]
 }
 
+// Nova tabela para armazenar edge devices
+model Dispositivo {
+  id        Int      @id @default(autoincrement())
+  nome      String // Ex: "Arduino Mega 2560 - Kit 01"
+  tipo      String // Ex: "Arduino Mega", "ESP32", "Arduino Nano"
+  status    String // Ex: "ATIVO", "INATIVO", "MANUTENCAO"
+  criado_em DateTime @default(now())
+
+  // Relacionamento inverso um-para-um com Plantação
+  plantacao Plantacao?
+}
+
 model Plantacao {
   id                   Int       @id @default(autoincrement())
   usuario_id           Int
+  dispositivo_id       Int?      @unique // FK Única: Garante apenas 1 dispositivo por plantação
   nome                 String
   tipo                 String
   data_inicio          DateTime
@@ -32,8 +45,11 @@ model Plantacao {
   descricao            String?
   criado_em            DateTime  @default(now())
 
-  usuario  Usuario           @relation(fields: [usuario_id], references: [id])
-  sensores PlantacaoSensor[]
+  usuario     Usuario           @relation(fields: [usuario_id], references: [id])
+  dispositivo Dispositivo?      @relation(fields: [dispositivo_id], references: [id]) // Ligação com o Hardware
+  sensores    PlantacaoSensor[]
+  leituras    Leitura[] // Novo: Relacionamento direto para armazenar o historico linear
+  alertas     Alerta[] // Novo: Relacionamento direto para facilitar a listagem de alertas por cultivo
 }
 
 model Sensor {
@@ -41,16 +57,18 @@ model Sensor {
   nome      String
   tipo      String
   unidade   String
+  status    String   @default("ATIVO") // Novo: Ex: "ATIVO", "INATIVO", "MANUTENCAO" 
   criado_em DateTime @default(now())
 
-  plantacoes PlantacaoSensor[]
+  plantacoes PlantacaoSensor?
+  // ALTERADO: Agora é opcional (1 para 1 virtual), pois o sensor físico só pode estar em 0 ou 1 plantação.
 }
 
 // Entidade Associativa que vincula o Sensor à Plantação e define as regras de negócio customizadas do plantio
 model PlantacaoSensor {
   id           Int     @id @default(autoincrement())
   plantacao_id Int
-  sensor_id    Int
+  sensor_id    Int     @unique // NOVO: @unique garente que o sensor especifico seja usado em apenas uma plantação por vez
   ativo        Boolean @default(true)
 
   limite_atencao Float
@@ -58,30 +76,37 @@ model PlantacaoSensor {
 
   plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
   sensor    Sensor    @relation(fields: [sensor_id], references: [id])
-  leituras  Leitura[]
 
   @@unique([plantacao_id, sensor_id])
 }
 
+// Tabela de Leitura Otimizada: Armazena o pacote consolidado enviado pelo hardware em uma unica linha
 model Leitura {
-  id                  Int      @id @default(autoincrement())
-  plantacao_sensor_id Int
-  valor               Float
-  data_hora           DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  plantacao_id Int // Alterado: Aponta direto para a plantacao contendo o dispositivo de borda
+  data_hora    DateTime @default(now())
 
-  vinculo_sensor PlantacaoSensor @relation(fields: [plantacao_sensor_id], references: [id])
-  alertas        Alerta[]
+  // Colunas de telemetria lineares (Opcionais para cenarios onde o sensor nao esteja instalado)
+  luminosidade Float?
+  temperatura  Float?
+  umidade_ar   Float?
+  umidade_solo Float?
+
+  plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
+  alertas   Alerta[]
 }
 
 model Alerta {
-  id          Int      @id @default(autoincrement())
-  leitura_id  Int
-  usuario_id  Int
-  tipo        String
-  mensagem    String
-  notificacao Boolean  @default(false)
-  gerado_em   DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  leitura_id   Int
+  usuario_id   Int
+  plantacao_id Int // Novo: Facilita indexar e buscar alertas direto por area de cultivo
+  tipo         String
+  mensagem     String
+  notificacao  Boolean  @default(false)
+  gerado_em    DateTime @default(now())
 
-  leitura Leitura @relation(fields: [leitura_id], references: [id])
-  usuario Usuario @relation(fields: [usuario_id], references: [id])
+  leitura   Leitura   @relation(fields: [leitura_id], references: [id])
+  usuario   Usuario   @relation(fields: [usuario_id], references: [id])
+  plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
 }
