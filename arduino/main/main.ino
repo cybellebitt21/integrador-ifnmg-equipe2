@@ -15,7 +15,7 @@ void setup() {
 }
 
 void loop() {
-  delay(2000);  // Intervalo necessário para o DHT
+  delay(120000);
 
   // Leitura LDR
   unsigned int leituraLDR = analogRead(LDR_SENSOR);  // Leitura bruta
