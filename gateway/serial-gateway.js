@@ -1,7 +1,7 @@
 import { SerialPort } from 'serialport';
 import { ReadlineParser } from '@serialport/parser-readline';
 
-const caminhoPortaSerial = '/dev/ttyUSB0';
+const caminhoPortaSerial = '/dev/ttyACM0';
 const urlBackend = 'http://localhost:3000/api/leitura-sensores';
 
 // Inicializa a conexão com a porta serial configurando o caminho e a taxa de transmissão
