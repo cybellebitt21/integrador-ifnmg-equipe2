@@ -17,19 +17,15 @@ void setup() {
 void loop() {
   delay(120000);
 
-  // Leitura LDR
   unsigned int leituraLDR = analogRead(LDR_SENSOR);  // Leitura bruta
   unsigned int luminosidade = map(leituraLDR, 0, 1023, 0, 100);
 
-  // Leitura DHT
   float umidadeAr = dht.readHumidity();
   float temperatura = dht.readTemperature();
 
-  // Leitura Umidade do Solo
   unsigned int leituraSolo = analogRead(SOLO_SENSOR);
   unsigned int umidadeSolo = map(leituraSolo, 1023, 0, 0, 100);
 
-  // Tratamento de erro simples para o DHT
   if (isnan(umidadeAr) || isnan(temperatura)) {
     umidadeAr = 0;
     temperatura = 0;
