@@ -1,80 +1,115 @@
-import prisma from "../src/lib/prisma";
+import prisma from "../src/lib/prisma.js";
 
-// Esse default insere 64.800 linhas por plantação (129.600 linhas)
-const INTERVALO_MINUTOS = 2; // simula o delay(120000) do arduino, não precisa alterar
-const DIAS_SIMULADOS = 90; // 3 meses, pode alterar para outro valor menor ou maior
-const TOTAL_CICLOS = (DIAS_SIMULADOS * 24 * 60) / INTERVALO_MINUTOS; // Não altere!
-const TAMANHO_BLOCO = 5000; // Mantenha esse valor para não estourar limite do SQL (SQLITE_MAX_VARIABLE_NUMBER)!
-// Cada query envia 5 campos para a tabela leitura
+const INTERVALO_MINUTOS = 2;
+const DIAS_SIMULADOS = 90;
+const TOTAL_CICLOS = (DIAS_SIMULADOS * 24 * 60) / INTERVALO_MINUTOS;
+const TAMANHO_BLOCO = 5000;
 
-// Função auxiliar para gerar números decimais aleatórios dentro de uma faixa
-function gerarValorAleatorio(min: number, max: number): number {
+function gerarValorMetricoAleatorio(min: number, max: number): number {
   return parseFloat((Math.random() * (max - min) + min).toFixed(1));
 }
 
 async function main() {
-  console.log("🚀 Iniciando Seed de Carga com Math.random...");
+  console.log("🌱 Iniciando seeding de performance...");
 
-  // Delete as tabelas filhas que apontam para outras tabelas
   await prisma.alerta.deleteMany();
   await prisma.plantacaoSensor.deleteMany();
   await prisma.leitura.deleteMany();
-
-  // Delete as tabelas intermediárias e pais
   await prisma.sensor.deleteMany();
   await prisma.plantacao.deleteMany();
   await prisma.dispositivo.deleteMany();
   await prisma.usuario.deleteMany();
 
   await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
-  console.log("Banco de dados limpo. Iniciando inserções...");
+  console.log("🧹 Banco de dados limpo com sucesso.");
 
-  // 1. Criar múltiplos usuários
-  console.log("Criando usuários de teste...");
-  const user1 = await prisma.usuario.create({
-    data: { nome: "Carlos Alberto", email: "carlos.teste@ifnmg.edu.br", senha: "hash", telefone: "38999991111" }
+  console.log("Criando usuarios para teste...");
+  const usuarioA = await prisma.usuario.create({
+    data: {
+      nome: "Carlos Alberto",
+      email: "carlos.teste@ifnmg.edu.br",
+      senha: "hash_seguro_aqui",
+      telefone: "38999991111"
+    }
   });
-  const user2 = await prisma.usuario.create({
-    data: { nome: "Maria Eduarda", email: "maria.teste@ifnmg.edu.br", senha: "hash", telefone: "38999992222" }
-  });
-
-  // 2. Criar Dispositivos adicionais
-  const dispA = await prisma.dispositivo.create({ data: { nome: "Nó Experimental Alfa", tipo: "ESP32", status: "ATIVO" } });
-  const dispB = await prisma.dispositivo.create({ data: { nome: "Nó Experimental Beta", tipo: "Arduino Mega", status: "ATIVO" } });
-
-  // 3. Criar Plantações que receberão a carga massiva
-  console.log("Criando plantações para stress-test...");
-  const plantacaoA = await prisma.plantacao.create({
-    data: { usuario_id: user1.id, dispositivo_id: dispA.id, nome: "Cultura Massiva A", tipo: "Grãos", data_inicio: new Date("2026-01-01T00:00:00Z") }
-  });
-  const plantacaoB = await prisma.plantacao.create({
-    data: { usuario_id: user2.id, dispositivo_id: dispB.id, nome: "Cultura Massiva B", tipo: "Olericultura", data_inicio: new Date("2026-01-01T00:00:00Z") }
+  const usuarioB = await prisma.usuario.create({
+    data: {
+      nome: "Maria Eduarda",
+      email: "maria.teste@ifnmg.edu.br",
+      senha: "hash_seguro_aqui",
+      telefone: "38999992222"
+    }
   });
 
-  const idsPlantacoes = [plantacaoA.id, plantacaoB.id];
+  console.log("Cadastrando os Dispositivos de Borda (Edge Devices)...");
+  const dispositivoAlfa = await prisma.dispositivo.create({
+    data: { nome: "Kit Arduino Mega 2560 - Lote A", tipo: "Arduino Mega", status: "ATIVO" }
+  });
+  const dispositivoBeta = await prisma.dispositivo.create({
+    data: { nome: "Kit ESP32 NodeMCU - Lote B", tipo: "ESP32", status: "ATIVO" }
+  });
 
+  console.log("Mapeando plantações)...");
+  const plantacaoAlfa = await prisma.plantacao.create({
+    data: {
+      usuario_id: usuarioA.id,
+      dispositivo_id: dispositivoAlfa.id,
+      nome: "Cultura Massiva de Feijao - Lote A",
+      tipo: "Graos",
+      data_inicio: new Date("2026-01-01T00:00:00Z"),
+      descricao: "Area de monitoramento intensivo para agricultura familiar no Vale do Jequitinhonha."
+    }
+  });
+  const plantacaoBeta = await prisma.plantacao.create({
+    data: {
+      usuario_id: usuarioB.id,
+      dispositivo_id: dispositivoBeta.id,
+      nome: "Horta Comunitaria - Lote B",
+      tipo: "Olericultura",
+      data_inicio: new Date("2026-01-01T00:00:00Z"),
+      descricao: "Cultivo de hortalicas com foco em economia hidrica."
+    }
+  });
+
+  console.log("Cadastrando e vinculando o Catalogo de Sensores Fisicos...");
+  const sensorClimaA = await prisma.sensor.create({
+    data: { nome: "Sensor de Clima DHT22", tipo: "TEMPERATURA", unidade: "degC", status: "ATIVO" }
+  });
+  const sensorSoloA = await prisma.sensor.create({
+    data: { nome: "Higrometro de Solo Capacitivo", tipo: "UMIDADE_SOLO", unidade: "%", status: "ATIVO" }
+  });
+
+  await prisma.plantacaoSensor.createMany({
+    data: [
+      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorClimaA.id, limite_atencao: 35.0, limite_critico: 39.0, ativo: true },
+      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorSoloA.id, limite_atencao: 40.0, limite_critico: 25.0, ativo: true }
+    ]
+  });
+
+  const idsPlantacoes = [plantacaoAlfa.id, plantacaoBeta.id];
   const dataInicioSimulacao = new Date();
   dataInicioSimulacao.setDate(dataInicioSimulacao.getDate() - DIAS_SIMULADOS);
 
-  console.log(`Total de registros calculados por plantação: ${TOTAL_CICLOS}`);
-  console.log(`Total consolidado na tabela Leitura: ${TOTAL_CICLOS * idsPlantacoes.length} linhas.`);
+  console.log("\nMetricas de Carga Calculadas:");
+  console.log(`- Registros por plantação: ${TOTAL_CICLOS}`);
+  console.log(`- Carga consolidada total na tabela Leitura: ${TOTAL_CICLOS * idsPlantacoes.length} registros.`);
 
-  // 4. Geração de massa de dados estruturada em blocos
   for (const plantacaoId of idsPlantacoes) {
-    console.log(`\n Gerando dados para a Plantação ID: ${plantacaoId}...`);
+    console.log(`\nInjetando dados em lote para Plantacao ID: ${plantacaoId}...`);
     let blocoDeDados: any[] = [];
 
     for (let i = 0; i < TOTAL_CICLOS; i++) {
       const dataHoraLeitura = new Date(dataInicioSimulacao.getTime() + i * INTERVALO_MINUTOS * 60 * 1000);
 
-      // Valores aleatórios diretos dentro de faixas comuns para cada sensor
-      const luminosidade = gerarValorAleatorio(0, 100);    // 0% a 100%
-      const temperatura = gerarValorAleatorio(15, 42);    // 15°C a 42°C
-      const umidadeSolo = gerarValorAleatorio(10, 90);    // 10% a 90%
+      const luminosidade = gerarValorMetricoAleatorio(10, 100);
+      const temperatura = gerarValorMetricoAleatorio(16, 41);
+      const umidadeAr = gerarValorMetricoAleatorio(15, 80);
+      const umidadeSolo = gerarValorMetricoAleatorio(12, 88);
 
       blocoDeDados.push({
         plantacao_id: plantacaoId,
         temperatura,
+        umidade_ar: umidadeAr,
         umidade_solo: umidadeSolo,
         luminosidade,
         data_hora: dataHoraLeitura,
@@ -84,18 +119,18 @@ async function main() {
         await prisma.leitura.createMany({
           data: blocoDeDados,
         });
-        process.stdout.write(`• Inseridas ${blocoDeDados.length} linhas...\n`);
+        console.log(`Bloco de ${blocoDeDados.length} leituras inserido no banco.`);
         blocoDeDados = [];
       }
     }
   }
 
-  console.log("\n Seed de performance finalizado!");
+  console.log("✨ Seeding finalizado com sucesso.");
 }
 
 main()
   .catch((erro) => {
-    console.error("❌ Erro durante o seed:", erro);
+    console.error("❌Erro critico detectado durante a execucao do seed:", erro);
     process.exit(1);
   })
   .finally(async () => {
