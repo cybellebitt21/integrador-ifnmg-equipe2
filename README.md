@@ -16,7 +16,7 @@ O sistema busca oferecer uma solução acessível e de baixo custo para apoiar o
 
 ---
 
-# 🎯 Objetivos
+## 🎯 Objetivos
 
 * Monitorar variáveis ambientais em tempo real;
 * Auxiliar produtores rurais na tomada de decisões agrícolas;
@@ -27,7 +27,7 @@ O sistema busca oferecer uma solução acessível e de baixo custo para apoiar o
 
 ---
 
-# Arquitetura do Sistema
+## Arquitetura do Sistema
 
 ```text
 Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dashboard
@@ -35,7 +35,7 @@ Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dash
 
 ---
 
-# ⚙️ Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
 ## Hardware
 
@@ -59,7 +59,7 @@ Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dash
 
 ---
 
-# Funcionalidades
+## Funcionalidades
 
 * Coleta de temperatura ambiente;
 * Coleta de umidade do ar;
@@ -73,7 +73,7 @@ Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dash
 
 ---
 
-# Modelagem do Banco de Dados
+## Modelagem do Banco de Dados
 
 O sistema foi modelado utilizando banco relacional com suporte às seguintes entidades:
 
@@ -93,7 +93,7 @@ A modelagem permite:
 
 ---
 
-# Funcionamento do Gateway
+## Funcionamento do Gateway
 
 O gateway é responsável por:
 
@@ -106,7 +106,7 @@ Essa arquitetura desacoplada permite maior organização e escalabilidade do sis
 
 ---
 
-# Estrutura do Projeto
+## Estrutura do Projeto
 
 ```bash
 agrosensor/
@@ -206,7 +206,7 @@ agrosensor/
 
 ---
 
-# Diagramas do Projeto
+## Diagramas do Projeto
 
 ## Modelo Conceitual
 
@@ -216,13 +216,13 @@ agrosensor/
 
 ## Arquitetura do Sistema
 
-![Arquitetura do Projeto](./documentação/diagramas/diagrama_projeto.png)
+![Arquitetura do Projeto](./documentacao/diagramas/diagrama_projeto.png)
 
 ---
 
-# Como Executar o Projeto
+## Como Executar o Projeto
 
-## Clone o repositório
+### Clone o repositório
 
 ```bash
 git clone git@github.com:carolainux/integrador-ifnmg-equipe2.git
@@ -230,7 +230,7 @@ git clone git@github.com:carolainux/integrador-ifnmg-equipe2.git
 
 ---
 
-## Acesse a pasta do projeto
+### Acesse a pasta do projeto
 
 ```bash
 cd integrador-ifnmg-equipe2
@@ -238,9 +238,9 @@ cd integrador-ifnmg-equipe2
 
 ---
 
-# Backend
+### Backend
 
-## Instalar dependências
+#### Instalar dependências
 
 ```bash
 cd backend
@@ -249,7 +249,7 @@ npm install
 
 ---
 
-## Executar servidor
+### Executar servidor
 
 ```bash
 npm run dev
@@ -257,9 +257,9 @@ npm run dev
 
 ---
 
-# Gateway
+### Gateway
 
-## Instalar dependências
+#### Instalar dependências
 
 ```bash
 cd gateway
@@ -268,7 +268,7 @@ npm install
 
 ---
 
-## Executar gateway serial
+### Executar gateway serial
 
 ```bash
 node serial-gateway.js
@@ -276,7 +276,7 @@ node serial-gateway.js
 
 ---
 
-# Arduino
+#### Arduino
 
 Faça upload do arquivo:
 
@@ -288,7 +288,7 @@ para o Arduino Mega 2560 utilizando a IDE do Arduino.
 
 ---
 
-# Futuras Implementações
+## Futuras Implementações
 
 * Dashboard web interativo;
 * Sistema de autenticação;
@@ -301,13 +301,13 @@ para o Arduino Mega 2560 utilizando a IDE do Arduino.
 
 ---
 
-# 📍 Contexto Regional
+## 📍 Contexto Regional
 
 O projeto possui foco social e tecnológico voltado ao município de Araçuaí e ao Vale do Jequitinhonha, buscando oferecer soluções acessíveis para agricultura familiar em regiões afetadas pela escassez hídrica.
 
 ---
 
-# 👥 Equipe
+## 👥 Equipe
 
 Projeto desenvolvido para a disciplina de Projeto Integrador.
 
@@ -326,9 +326,8 @@ Projeto desenvolvido para a disciplina de Projeto Integrador.
 * **Cybelle Leandro Bittencourt** — QA / Tester
   GitHub: @cybellebitt21
 
-
 ---
 
-# 📄 Licença
+## 📄 Licença
 
 Este projeto possui finalidade acadêmica e educacional.
