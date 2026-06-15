@@ -17,24 +17,24 @@ void setup() {
 void loop() {
   delay(120000);
 
-  unsigned int leituraLDR = analogRead(LDR_SENSOR);  // Leitura bruta
-  unsigned int luminosidade = map(leituraLDR, 0, 1023, 0, 100);
+  unsigned int leitura_ldr = analogRead(LDR_SENSOR);  // Leitura bruta
+  unsigned int luminosidade = map(leitura_ldr, 0, 1023, 0, 100);
 
-  float umidadeAr = dht.readHumidity();
+  float umidade_ar = dht.readHumidity();
   float temperatura = dht.readTemperature();
 
-  unsigned int leituraSolo = analogRead(SOLO_SENSOR);
-  unsigned int umidadeSolo = map(leituraSolo, 1023, 0, 0, 100);
+  unsigned int leitura_solo = analogRead(SOLO_SENSOR);
+  unsigned int umidade_solo = map(leitura_solo, 1023, 0, 0, 100);
 
-  if (isnan(umidadeAr) || isnan(temperatura)) {
-    umidadeAr = 0;
+  if (isnan(umidade_ar) || isnan(temperatura)) {
+    umidade_ar = 0;
     temperatura = 0;
   }
 
   // Saída para o gateway
-  Serial.print(umidadeSolo);
+  Serial.print(umidade_solo);
   Serial.print(F(","));
-  Serial.print(umidadeAr);
+  Serial.print(umidade_ar);
   Serial.print(F(","));
   Serial.print(temperatura);
   Serial.print(F(","));

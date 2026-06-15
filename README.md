@@ -109,99 +109,7 @@ Essa arquitetura desacoplada permite maior organização e escalabilidade do sis
 ## Estrutura do Projeto
 
 ```bash
-agrosensor/
-├── arduino
-│   └── main
-│       ├── main.ino
-│       ├── main.test
-│       └── sketch.yaml
-├── backend
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── prisma
-│   │   ├── dev.db
-│   │   ├── migrations
-│   │   │   ├── 20260523222121_criacao_tabelas_iniciais
-│   │   │   │   └── migration.sql
-│   │   │   ├── 20260524210005_migracao_limites_para_vinculo
-│   │   │   │   └── migration.sql
-│   │   │   ├── 20260526212531_adiciona_tabela_dispositivo
-│   │   │   │   └── migration.sql
-│   │   │   ├── 20260527001656_transforma_sensores_em_itens_fisicos
-│   │   │   │   └── migration.sql
-│   │   │   ├── 20260527004950_otimiza_leituras_para_formato_linear
-│   │   │   │   └── migration.sql
-│   │   │   ├── 20260604045227_ajusta_exclusividade_sensores_e_dispositivo
-│   │   │   │   └── migration.sql
-│   │   │   └── migration_lock.toml
-│   │   ├── schema.prisma
-│   │   ├── seed-performance.ts
-│   │   └── seed.ts
-│   ├── prisma.config.ts
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── leitura.controller.ts
-│   │   │   └── usuario.controller.ts
-│   │   ├── env
-│   │   │   └── index.ts
-│   │   ├── lib
-│   │   │   └── prisma.ts
-│   │   ├── models
-│   │   │   ├── Alerta.model.ts
-│   │   │   ├── Dispositivo.model.ts
-│   │   │   ├── Leitura.model.ts
-│   │   │   ├── Plantacao.model.ts
-│   │   │   ├── Sensor.model.ts
-│   │   │   └── Usuario.model.ts
-│   │   ├── routes
-│   │   │   ├── alerta.route.ts
-│   │   │   ├── dispositivo.route.ts
-│   │   │   ├── index.route.ts
-│   │   │   ├── leitura.route.ts
-│   │   │   ├── plantacao.route.ts
-│   │   │   ├── sensor.route.ts
-│   │   │   └── usuario.route.ts
-│   │   ├── server.ts
-│   │   └── services
-│   │       ├── alerta.service.ts
-│   │       ├── dispositivo.service.ts
-│   │       ├── leitura.service.ts
-│   │       ├── plantacao.service.ts
-│   │       ├── sensor.service.ts
-│   │       └── usuario.service.ts
-│   └── tsconfig.json
-├── design-ux-ui
-├── documentacao
-│   ├── atas-reuniao.md
-│   ├── casos-de-uso.md
-│   ├── diagramas
-│   │   ├── diagrama_projeto.png
-│   │   ├── logico_1_old.brM3
-│   │   ├── modelo_conceitual_final.confia.brM3
-│   │   ├── modelo_conceitual_final.confia.png
-│   │   ├── modelo_conceitual_old.brM3
-│   │   ├── modelo_conceitual_old.png
-│   │   └── README.md
-│   ├── fontes.md
-│   ├── modelagem-banco.md
-│   ├── projeto.md
-│   ├── referencias
-│   │   └── artigos.md
-│   ├── referencias.md
-│   ├── regras-negocio.md
-│   └── requisitos.md
-├── frontend
-├── gateway
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── src
-│   │   ├── env
-│   │   │   └── index.ts
-│   │   └── serial-gateway.ts
-│   └── tsconfig.json
-└── README.md
-
-27 directories, 64 files
+NULL
 ```
 
 ---
@@ -210,7 +118,13 @@ agrosensor/
 
 ## Modelo Conceitual
 
-![Modelo Conceitual](./documentacao/diagramas/modelo_conceitual_final.confia.png)
+![Modelo Conceitual](./documentacao/diagramas/modelo_conceitual.png)
+
+---
+
+## Modelo Lógico
+
+![Modelo Lógico](./documentacao/diagramas/modelo_logico.png)
 
 ---
 

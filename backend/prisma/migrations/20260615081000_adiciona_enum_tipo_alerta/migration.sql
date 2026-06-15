@@ -1,0 +1,2 @@
+-- Migration: adiciona_enum_tipo_alerta
+-- Adiciona o enum tipoAlerta e altera Alerta.tipo de String para tipoAlerta.

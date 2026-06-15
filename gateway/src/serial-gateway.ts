@@ -33,15 +33,15 @@ parser.on('data', async (linha) => {
   }
 
   const dadosSensor = {
-    umidadeSolo: parseInt(dadosSegmentados[0], 10),
-    umidadeAr: parseFloat(dadosSegmentados[1]),
+    umidade_solo: parseInt(dadosSegmentados[0], 10),
+    umidade_ar: parseFloat(dadosSegmentados[1]),
     temperatura: parseFloat(dadosSegmentados[2]),
     luminosidade: parseInt(dadosSegmentados[3], 10),
   };
 
   const dadosValidos =
-    !isNaN(dadosSensor.umidadeSolo) &&
-    !isNaN(dadosSensor.umidadeAr) &&
+    !isNaN(dadosSensor.umidade_solo) &&
+    !isNaN(dadosSensor.umidade_ar) &&
     !isNaN(dadosSensor.temperatura) &&
     !isNaN(dadosSensor.luminosidade);
 
@@ -51,7 +51,7 @@ parser.on('data', async (linha) => {
   }
 
   try {
-    console.log(`Enviando dados: Solo: ${dadosSensor.umidadeSolo}%, Ar: ${dadosSensor.umidadeAr}%, Temp: ${dadosSensor.temperatura}C, Luz: ${dadosSensor.luminosidade}%`);
+    console.log(`Enviando dados: Solo: ${dadosSensor.umidade_solo}%, Ar: ${dadosSensor.umidade_ar}%, Temp: ${dadosSensor.temperatura}C, Luz: ${dadosSensor.luminosidade}%`);
 
     const resposta = await fetch(urlBackend, {
       method: 'POST',

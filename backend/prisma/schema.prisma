@@ -19,17 +19,53 @@ model Usuario {
 
   plantacoes Plantacao[]
   alertas    Alerta[]
+
+  @@map("usuario")
+}
+
+enum statusDispositivo {
+  Ativo
+  Inativo
+}
+
+enum statusSensor {
+  Ativo
+  Inativo
+}
+
+enum tipoSensor {
+  temperatura
+  umidade_ar   @map("Umidade do Ar")
+  umidade_solo @map("Umidade do Solo")
+  luminosidade
+}
+
+enum tipoAlerta {
+  Atencao
+  Critico
+}
+
+enum tipoDispositivo {
+  Arduino_Mega     @map("Arduino Mega")
+  Arduino_Micro    @map("Arduino Micro")
+  Arduino_Nano     @map("Arduino Nano")
+  Arduino_Uno      @map("Arduino Uno")
+  Arduino_Leonardo @map("Arduino Leonardo")
+  ESP32
+  ESP8266
 }
 
 model Dispositivo {
-  id        Int      @id @default(autoincrement())
+  id        Int               @id @default(autoincrement())
   nome      String // Ex: "Arduino Mega 2560 - Kit 01"
-  tipo      String // Ex: "Arduino Mega", "ESP32", "Arduino Nano"
-  status    String // Ex: "ATIVO", "INATIVO", "MANUTENCAO"
-  criado_em DateTime @default(now())
+  tipo      tipoDispositivo
+  status    statusDispositivo @default(Inativo)
+  criado_em DateTime          @default(now())
 
   // Relacionamento um-para-um com Plantação
   plantacao Plantacao?
+
+  @@map("dispositivo")
 }
 
 model Plantacao {
@@ -49,25 +85,27 @@ model Plantacao {
   sensores    PlantacaoSensor[]
   leituras    Leitura[]
   alertas     Alerta[] // Relacionamento direto para facilitar a listagem de alertas por cultivo
+
+  @@map("plantacao")
 }
 
 model Sensor {
-  id        Int      @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   nome      String // Ex: "Sensor de Temperatura DHT11"
-  tipo      String // Ex: "TEMPERATURA", "UMIDADE_AR", "UMIDADE_SOLO", "LUMINOSIDADE"
+  tipo      tipoSensor
   unidade   String // Ex: "°C", "%", "Lux"
-  status    String   @default("ATIVO") // Ex: "ATIVO", "INATIVO", "MANUTENCAO" 
-  criado_em DateTime @default(now())
+  status    statusSensor @default(Inativo)
+  criado_em DateTime     @default(now())
 
   plantacoes PlantacaoSensor? // permite o sensor não estar em nenhuma plantação
+
+  @@map("sensor")
 }
 
 model PlantacaoSensor {
   id           Int     @id @default(autoincrement())
   plantacao_id Int
   sensor_id    Int     @unique
-  ativo        Boolean @default(true)
-
   limite_atencao Float
   limite_critico Float
 
@@ -75,6 +113,7 @@ model PlantacaoSensor {
   sensor    Sensor    @relation(fields: [sensor_id], references: [id])
 
   @@unique([plantacao_id, sensor_id]) // Impede duplicar o mesmo sensor na mesma plantação
+  @@map("plantacao_sensor")
 }
 
 model Leitura {
@@ -88,6 +127,8 @@ model Leitura {
 
   plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
   alertas   Alerta[]
+
+  @@map("leitura")
 }
 
 model Alerta {
@@ -95,7 +136,7 @@ model Alerta {
   leitura_id   Int
   usuario_id   Int
   plantacao_id Int // Facilita indexar e buscar alertas direto por plantação
-  tipo         String
+  tipo         tipoAlerta
   mensagem     String
   notificacao  Boolean  @default(false)
   gerado_em    DateTime @default(now())
@@ -103,4 +144,6 @@ model Alerta {
   leitura   Leitura   @relation(fields: [leitura_id], references: [id])
   usuario   Usuario   @relation(fields: [usuario_id], references: [id])
   plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
+
+  @@map("alerta")
 }

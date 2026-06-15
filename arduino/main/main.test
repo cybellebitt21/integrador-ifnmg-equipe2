@@ -7,16 +7,16 @@ void setup() {
 void loop() {
   delay(5000);
 
-  unsigned int umidadeSolo = random(20, 86);
+  unsigned int umidade_solo = random(20, 86);
 
-  float umidadeAr = random(400, 701) / 10.0;
+  float umidade_ar = random(400, 701) / 10.0;
   float temperatura = random(210, 341) / 10.0;
 
   unsigned int luminosidade = random(10, 96);
 
-  Serial.print(umidadeSolo);
+  Serial.print(umidade_solo);
   Serial.print(F(","));
-  Serial.print(umidadeAr);
+  Serial.print(umidade_ar);
   Serial.print(F(","));
   Serial.print(temperatura);
   Serial.print(F(","));

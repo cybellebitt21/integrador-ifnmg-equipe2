@@ -1,4 +1,5 @@
 import prisma from "../src/lib/prisma.js";
+import { tipoSensor, statusSensor, tipoDispositivo, statusDispositivo } from "@prisma/client";
 
 const INTERVALO_MINUTOS = 2;
 const DIAS_SIMULADOS = 90;
@@ -43,10 +44,10 @@ async function main() {
 
   console.log("Cadastrando os Dispositivos de Borda (Edge Devices)...");
   const dispositivoAlfa = await prisma.dispositivo.create({
-    data: { nome: "Kit Arduino Mega 2560 - Lote A", tipo: "Arduino Mega", status: "ATIVO" }
+    data: { nome: "Kit Arduino Mega 2560 - Lote A", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo }
   });
   const dispositivoBeta = await prisma.dispositivo.create({
-    data: { nome: "Kit ESP32 NodeMCU - Lote B", tipo: "ESP32", status: "ATIVO" }
+    data: { nome: "Kit ESP32 NodeMCU - Lote B", tipo: tipoDispositivo.ESP32, status: statusDispositivo.Ativo }
   });
 
   console.log("Mapeando plantações)...");
@@ -73,16 +74,16 @@ async function main() {
 
   console.log("Cadastrando e vinculando o Catalogo de Sensores Fisicos...");
   const sensorClimaA = await prisma.sensor.create({
-    data: { nome: "Sensor de Clima DHT22", tipo: "TEMPERATURA", unidade: "degC", status: "ATIVO" }
+    data: { nome: "Sensor de Clima DHT22", tipo: tipoSensor.temperatura, unidade: "degC", status: statusSensor.Ativo }
   });
   const sensorSoloA = await prisma.sensor.create({
-    data: { nome: "Higrometro de Solo Capacitivo", tipo: "UMIDADE_SOLO", unidade: "%", status: "ATIVO" }
+    data: { nome: "Higrometro de Solo Capacitivo", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Ativo }
   });
 
   await prisma.plantacaoSensor.createMany({
     data: [
-      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorClimaA.id, limite_atencao: 35.0, limite_critico: 39.0, ativo: true },
-      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorSoloA.id, limite_atencao: 40.0, limite_critico: 25.0, ativo: true }
+      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorClimaA.id, limite_atencao: 35.0, limite_critico: 39.0 },
+      { plantacao_id: plantacaoAlfa.id, sensor_id: sensorSoloA.id, limite_atencao: 40.0, limite_critico: 25.0 }
     ]
   });
 
