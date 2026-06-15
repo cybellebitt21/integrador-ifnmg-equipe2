@@ -1,4 +1,5 @@
 import prisma from "../src/lib/prisma.js";
+import { tipoSensor, statusSensor, tipoDispositivo, statusDispositivo, tipoAlerta } from "@prisma/client";
 
 async function main() {
   console.log("🌱 Iniciando o seeding do banco de dados...");
@@ -23,20 +24,16 @@ async function main() {
     },
   });
 
-  const sUmidadeSolo01 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 01", tipo: "UMIDADE_SOLO", unidade: "%", status: "ATIVO" } });
-  const sUmidadeSolo02 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 02", tipo: "UMIDADE_SOLO", unidade: "%", status: "ATIVO" } });
-  const sTemperatura01 = await prisma.sensor.create({ data: { nome: "DHT22 - Temperatura - Item 01", tipo: "TEMPERATURA", unidade: "°C", status: "ATIVO" } });
-  const sUmidadeAr01 = await prisma.sensor.create({ data: { nome: "DHT22 - Umidade Ar - Item 01", tipo: "UMIDADE_AR", unidade: "%", status: "ATIVO" } });
-  const sLuminosidade01 = await prisma.sensor.create({ data: { nome: "LDR 5mm - Item 01", tipo: "LUMINOSIDADE", unidade: "%", status: "ATIVO" } });
+  const sUmidadeSolo01 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 01", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Ativo } });
+  const sUmidadeSolo02 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 02", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Ativo } });
+  const sTemperatura01 = await prisma.sensor.create({ data: { nome: "DHT22 - Temperatura - Item 01", tipo: tipoSensor.temperatura, unidade: "°C", status: statusSensor.Ativo } });
+  const sUmidadeAr01 = await prisma.sensor.create({ data: { nome: "DHT22 - Umidade Ar - Item 01", tipo: tipoSensor.umidade_ar, unidade: "%", status: statusSensor.Ativo } });
+  const sLuminosidade01 = await prisma.sensor.create({ data: { nome: "LDR 5mm - Item 01", tipo: tipoSensor.luminosidade, unidade: "%", status: statusSensor.Ativo } });
 
-  await prisma.sensor.create({ data: { nome: "Sensor de Solo Antigo - Danificado", tipo: "UMIDADE_SOLO", unidade: "%", status: "MANUTENCAO" } });
-
-  const disp01 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit A", tipo: "Arduino Mega", status: "ATIVO" } });
-  const disp02 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit B", tipo: "Arduino Mega", status: "ATIVO" } });
-  const disp03 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit C", tipo: "Arduino Mega", status: "ATIVO" } });
-  const disp04 = await prisma.dispositivo.create({ data: { nome: "ESP32 NodeMCU - Protótipo", tipo: "ESP32", status: "ATIVO" } });
-
-  await prisma.dispositivo.create({ data: { nome: "Arduino Nano - Danificado", tipo: "Arduino Nano", status: "MANUTENCAO" } });
+  const disp01 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit A", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
+  const disp02 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit B", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
+  const disp03 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit C", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
+  const disp04 = await prisma.dispositivo.create({ data: { nome: "ESP32 NodeMCU - Protótipo", tipo: tipoDispositivo.ESP32, status: statusDispositivo.Ativo } });
 
   console.log("Catálogo de sensores e estoque de dispositivos criados.");
 
@@ -106,7 +103,7 @@ async function main() {
       plantacao_id: plantacaoMonitorada.id,
       umidade_solo: 45.5,
       temperatura: 26.2,
-      umidade_ar: 62.0, // Coluna opcional adicionada para consistência
+      umidade_ar: 62.0,
       luminosidade: 70.0,
       data_hora: new Date(),
     },
@@ -128,7 +125,7 @@ async function main() {
       leitura_id: leituraCritica.id,
       usuario_id: usuario.id,
       plantacao_id: plantacaoMonitorada.id,
-      tipo: "CRITICO",
+      tipo: tipoAlerta.Critico,
       mensagem: `Alerta Crítico: Temperatura severa detectada: (${leituraCritica.temperatura}°C). Risco de quebra de estresse térmico.`,
     },
   });
