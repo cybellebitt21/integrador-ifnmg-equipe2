@@ -42,7 +42,7 @@ auxiliar na tomada de decisões relacionadas ao plantio e irrigação.
 ## Arquitetura do Sistema
 
 ```text
-Sensores -> Arduino Mega -> Gateway Serial -> API REST ->
+Sensores -> Arduino Mega 2560 -> Gateway Serial -> API REST ->
 Banco de Dados -> Dashboard
 ```
 
