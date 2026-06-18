@@ -1,18 +1,17 @@
-import { tipoSensor } from '@prisma/client';
+import { Prisma, tipoSensor } from '@prisma/client';
 import { AlertaService } from './alerta.service.js';
-import { LeituraModel } from '../models/Leitura.model.js';
-import { PlantacaoModel } from '../models/Plantacao.model.js';
-import { PlantacaoSensorModel } from '../models/PlantacaoSensor.model.js';
+import { LeituraModel } from '../models/leitura.model.js';
+import { PlantacaoModel } from '../models/plantacao.model.js';
+import { PlantacaoSensorModel } from '../models/plantacao-sensor.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
-interface CriarLeituraDados {
+type CamposLeitura = Pick<Prisma.LeituraCreateInput, 'temperatura' | 'umidade_ar' | 'umidade_solo' | 'luminosidade'>;
+
+interface CriarLeituraDados extends CamposLeitura {
   plantacao_id?: number;
-  umidade_solo?: number;
-  umidade_ar?: number;
-  temperatura?: number;
-  luminosidade?: number;
 }
 
-const TIPO_PARA_CAMPO: Record<tipoSensor, keyof CriarLeituraDados> = {
+const TIPO_PARA_CAMPO: Record<tipoSensor, keyof CamposLeitura> = {
   [tipoSensor.temperatura]: 'temperatura',
   [tipoSensor.umidade_ar]: 'umidade_ar',
   [tipoSensor.umidade_solo]: 'umidade_solo',
@@ -73,11 +72,7 @@ export const LeituraService = {
   },
 
   async buscarPorId(id: number) {
-    const leitura = await LeituraModel.buscarPorId(id);
-    if (!leitura) {
-      throw new Error(`Nenhuma leitura encontrada com o identificador ${id}.`);
-    }
-    return leitura;
+    return await findOrThrow(LeituraModel, id, 'leitura', true);
   },
 
   async obterDadosDashboard(plantacao_id: number) {
@@ -88,15 +83,9 @@ export const LeituraService = {
     return dados;
   },
 
-  async atualizar(id: number, dados: Partial<CriarLeituraDados>) {
+  async atualizar(id: number, dados: Prisma.LeituraUpdateInput) {
     await LeituraService.buscarPorId(id);
-    return await LeituraModel.atualizar(id, {
-      ...(dados.temperatura !== undefined && { temperatura: dados.temperatura }),
-      ...(dados.umidade_ar !== undefined && { umidade_ar: dados.umidade_ar }),
-      ...(dados.umidade_solo !== undefined && { umidade_solo: dados.umidade_solo }),
-      ...(dados.luminosidade !== undefined && { luminosidade: dados.luminosidade }),
-      ...(dados.plantacao_id !== undefined && { plantacao_id: dados.plantacao_id }),
-    });
+    return await LeituraModel.atualizar(id, dados);
   },
 
   async deletar(id: number) {

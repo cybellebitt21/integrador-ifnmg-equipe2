@@ -1,8 +1,9 @@
 import { tipoAlerta, tipoSensor } from '@prisma/client';
-import { AlertaModel } from '../models/Alerta.model.js';
-import { LeituraModel } from '../models/Leitura.model.js';
-import { PlantacaoModel } from '../models/Plantacao.model.js';
-import { PlantacaoSensorModel } from '../models/PlantacaoSensor.model.js';
+import { AlertaModel } from '../models/alerta.model.js';
+import { LeituraModel } from '../models/leitura.model.js';
+import { PlantacaoModel } from '../models/plantacao.model.js';
+import { PlantacaoSensorModel } from '../models/plantacao-sensor.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarAlertaDados {
   leitura_id: number;
@@ -40,11 +41,7 @@ export const AlertaService = {
   },
 
   async buscarPorId(id: number) {
-    const alerta = await AlertaModel.buscarPorId(id);
-    if (!alerta) {
-      throw new Error(`Nenhum alerta encontrado com o identificador ${id}.`);
-    }
-    return alerta;
+    return await findOrThrow(AlertaModel, id, 'alerta');
   },
 
   async buscarPorPlantacao(plantacao_id: number) {

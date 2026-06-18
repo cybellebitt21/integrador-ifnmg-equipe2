@@ -11,12 +11,26 @@ export const UsuarioModel = {
   async buscarPorId(id: number) {
     return await prisma.usuario.findUnique({
       where: { id },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
     });
   },
 
   async buscarPorEmail(email: string) {
     return await prisma.usuario.findUnique({
       where: { email },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
     });
   },
 
@@ -36,6 +50,13 @@ export const UsuarioModel = {
     return await prisma.usuario.update({
       where: { id },
       data,
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
     });
   },
 

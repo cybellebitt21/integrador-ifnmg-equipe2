@@ -1,6 +1,7 @@
 import { statusSensor } from '@prisma/client';
-import { PlantacaoSensorModel } from '../models/PlantacaoSensor.model.js';
-import { SensorModel } from '../models/Sensor.model.js';
+import { PlantacaoSensorModel } from '../models/plantacao-sensor.model.js';
+import { SensorModel } from '../models/sensor.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarPlantacaoSensorDados {
   plantacao_id: number;
@@ -21,10 +22,6 @@ export const PlantacaoSensorService = {
       throw new Error(`Sensor com ID ${dados.sensor_id} não encontrado.`);
     }
 
-    if (dados.limite_atencao <= 0 || dados.limite_critico <= 0) {
-      throw new Error('Os limites de atenção e crítico devem ser maiores que 0.');
-    }
-
     const plantacaoSensorDados = {
       plantacao: { connect: { id: dados.plantacao_id } },
       sensor: { connect: { id: dados.sensor_id } },
@@ -40,11 +37,7 @@ export const PlantacaoSensorService = {
   },
 
   async buscarPorId(id: number) {
-    const plantacaoSensor = await PlantacaoSensorModel.buscarPorId(id);
-    if (!plantacaoSensor) {
-      throw new Error(`Nenhuma associação plantação-sensor encontrada com o identificador ${id}.`);
-    }
-    return plantacaoSensor;
+    return await findOrThrow(PlantacaoSensorModel, id, 'associação plantação-sensor', true);
   },
 
   async buscarPorPlantacao(plantacao_id: number) {

@@ -1,12 +1,14 @@
 import express from 'express';
-import routes from './routes/index.route.js'
 import { env } from './env/index.js';
+import routes from './routes/index.route.js'
+import { errorHandler } from './middlewares/error-handler.js';
 
 const app = express();
-const port = process.env.PORT;
+const port = env.PORT;
 
 app.use(express.json());
 app.use('/api', routes);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log('API Rodando com sucesso!')

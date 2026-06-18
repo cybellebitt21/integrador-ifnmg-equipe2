@@ -1,6 +1,7 @@
 import { statusDispositivo } from '@prisma/client';
-import { PlantacaoModel } from '../models/Plantacao.model.js';
-import { DispositivoModel } from '../models/Dispositivo.model.js';
+import { PlantacaoModel } from '../models/plantacao.model.js';
+import { DispositivoModel } from '../models/dispositivo.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarPlantacaoDados {
   usuario_id: number;
@@ -43,11 +44,7 @@ export const PlantacaoService = {
   },
 
   async buscarPorId(id: number) {
-    const plantacao = await PlantacaoModel.buscarPorId(id);
-    if (!plantacao) {
-      throw new Error(`Nenhuma plantação encontrada com o identificador ${id}.`);
-    }
-    return plantacao;
+    return await findOrThrow(PlantacaoModel, id, 'plantação', true);
   },
 
   async buscarTodos() {

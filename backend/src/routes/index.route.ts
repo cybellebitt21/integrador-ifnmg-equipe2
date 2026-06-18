@@ -14,7 +14,7 @@ router.use('/dispositivos', dispositivoRoutes);
 router.use('/plantacoes', plantacaoRoutes);
 router.use('/sensores', sensorRoutes);
 router.use('/plantacoes-sensores', plantacaoSensorRoutes);
-router.use('/leitura-sensores', leituraRoutes);
+router.use('/leituras', leituraRoutes);
 router.use('/alertas', alertaRoutes);
 
 export default router;
