@@ -13,13 +13,9 @@ function gerarValorMetricoAleatorio(min: number, max: number): number {
 async function main() {
   console.log("🌱 Iniciando seeding de performance...");
 
-  await prisma.alerta.deleteMany();
-  await prisma.plantacaoSensor.deleteMany();
-  await prisma.leitura.deleteMany();
-  await prisma.sensor.deleteMany();
-  await prisma.plantacao.deleteMany();
-  await prisma.dispositivo.deleteMany();
   await prisma.usuario.deleteMany();
+  await prisma.dispositivo.deleteMany();
+  await prisma.sensor.deleteMany();
 
   await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
   console.log("🧹 Banco de dados limpo com sucesso.");

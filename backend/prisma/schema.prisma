@@ -80,7 +80,7 @@ model Plantacao {
   descricao            String?
   criado_em            DateTime  @default(now())
 
-  usuario     Usuario           @relation(fields: [usuario_id], references: [id])
+  usuario     Usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
   dispositivo Dispositivo       @relation(fields: [dispositivo_id], references: [id])
   sensores    PlantacaoSensor[]
   leituras    Leitura[]
@@ -103,14 +103,14 @@ model Sensor {
 }
 
 model PlantacaoSensor {
-  id           Int     @id @default(autoincrement())
-  plantacao_id Int
-  sensor_id    Int     @unique
+  id             Int   @id @default(autoincrement())
+  plantacao_id   Int
+  sensor_id      Int   @unique
   limite_atencao Float
   limite_critico Float
 
-  plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
-  sensor    Sensor    @relation(fields: [sensor_id], references: [id])
+  plantacao Plantacao @relation(fields: [plantacao_id], references: [id], onDelete: Restrict)
+  sensor    Sensor    @relation(fields: [sensor_id], references: [id]) // Restrict: não deletar sensor em uso
 
   @@unique([plantacao_id, sensor_id]) // Impede duplicar o mesmo sensor na mesma plantação
   @@map("plantacao_sensor")
@@ -125,24 +125,24 @@ model Leitura {
   umidade_ar   Float?
   umidade_solo Float?
 
-  plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
+  plantacao Plantacao @relation(fields: [plantacao_id], references: [id], onDelete: Cascade)
   alertas   Alerta[]
 
   @@map("leitura")
 }
 
 model Alerta {
-  id           Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   leitura_id   Int
   usuario_id   Int
-  plantacao_id Int // Facilita indexar e buscar alertas direto por plantação
+  plantacao_id Int
   tipo         tipoAlerta
   mensagem     String
-  notificacao  Boolean  @default(false)
-  gerado_em    DateTime @default(now())
+  notificacao  Boolean    @default(false)
+  gerado_em    DateTime   @default(now())
 
-  leitura   Leitura   @relation(fields: [leitura_id], references: [id])
-  usuario   Usuario   @relation(fields: [usuario_id], references: [id])
+  leitura   Leitura   @relation(fields: [leitura_id], references: [id], onDelete: Cascade)
+  usuario   Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
   plantacao Plantacao @relation(fields: [plantacao_id], references: [id])
 
   @@map("alerta")

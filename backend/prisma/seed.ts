@@ -4,13 +4,9 @@ import { tipoSensor, statusSensor, tipoDispositivo, statusDispositivo, tipoAlert
 async function main() {
   console.log("🌱 Iniciando o seeding do banco de dados...");
 
-  await prisma.alerta.deleteMany();
-  await prisma.leitura.deleteMany();
-  await prisma.plantacaoSensor.deleteMany();
-  await prisma.sensor.deleteMany();
-  await prisma.plantacao.deleteMany();
-  await prisma.dispositivo.deleteMany();
   await prisma.usuario.deleteMany();
+  await prisma.dispositivo.deleteMany();
+  await prisma.sensor.deleteMany();
 
   await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
   console.log("🧹 Banco de dados e contadores AUTOINCREMENT limpos.");
