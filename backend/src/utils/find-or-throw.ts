@@ -1,6 +1,6 @@
 export async function findOrThrow<T>(
-  model: { buscarPorId: (id: number) => Promise<T | null> },
-  id: number,
+  model: { buscarPorId: (id: string) => Promise<T | null> },
+  id: string,
   nomeEntidade: string,
   feminino: boolean = false
 ): Promise<T> {

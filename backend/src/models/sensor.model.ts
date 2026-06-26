@@ -8,7 +8,7 @@ export const SensorModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.sensor.findUnique({
       where: { id },
       include: {
@@ -43,14 +43,14 @@ export const SensorModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.SensorUpdateInput) {
+  async atualizar(id: string, data: Prisma.SensorUpdateInput) {
     return await prisma.sensor.update({
       where: { id },
       data,
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.sensor.delete({
       where: { id },
     });

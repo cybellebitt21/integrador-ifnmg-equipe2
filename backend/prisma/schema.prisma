@@ -10,7 +10,7 @@ generator client {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   nome      String
   email     String   @unique
   senha     String
@@ -56,7 +56,7 @@ enum tipoDispositivo {
 }
 
 model Dispositivo {
-  id        Int               @id @default(autoincrement())
+  id        String            @id @default(uuid())
   nome      String // Ex: "Arduino Mega 2560 - Kit 01"
   tipo      tipoDispositivo
   status    statusDispositivo @default(Inativo)
@@ -69,9 +69,9 @@ model Dispositivo {
 }
 
 model Plantacao {
-  id                   Int       @id @default(autoincrement())
-  usuario_id           Int
-  dispositivo_id       Int       @unique // FK: Garante apenas 1 dispositivo por plantação
+  id                   String    @id @default(uuid())
+  usuario_id           String
+  dispositivo_id       String    @unique // FK: Garante apenas 1 dispositivo por plantação
   nome                 String
   tipo                 String
   data_inicio          DateTime
@@ -90,7 +90,7 @@ model Plantacao {
 }
 
 model Sensor {
-  id        Int          @id @default(autoincrement())
+  id        String       @id @default(uuid())
   nome      String // Ex: "Sensor de Temperatura DHT11"
   tipo      tipoSensor
   unidade   String // Ex: "°C", "%", "Lux"
@@ -103,9 +103,9 @@ model Sensor {
 }
 
 model PlantacaoSensor {
-  id             Int   @id @default(autoincrement())
-  plantacao_id   Int
-  sensor_id      Int   @unique
+  id             String @id @default(uuid())
+  plantacao_id   String
+  sensor_id      String @unique
   limite_atencao Float
   limite_critico Float
 
@@ -117,8 +117,8 @@ model PlantacaoSensor {
 }
 
 model Leitura {
-  id           Int      @id @default(autoincrement())
-  plantacao_id Int
+  id           String   @id @default(uuid())
+  plantacao_id String
   data_hora    DateTime @default(now())
   luminosidade Float?
   temperatura  Float?
@@ -132,10 +132,10 @@ model Leitura {
 }
 
 model Alerta {
-  id           Int        @id @default(autoincrement())
-  leitura_id   Int
-  usuario_id   Int
-  plantacao_id Int
+  id           String     @id @default(uuid())
+  leitura_id   String
+  usuario_id   String
+  plantacao_id String
   tipo         tipoAlerta
   mensagem     String
   notificacao  Boolean    @default(false)

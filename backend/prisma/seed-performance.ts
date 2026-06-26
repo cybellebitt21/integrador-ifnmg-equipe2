@@ -17,7 +17,6 @@ async function main() {
   await prisma.dispositivo.deleteMany();
   await prisma.sensor.deleteMany();
 
-  await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
   console.log("🧹 Banco de dados limpo com sucesso.");
 
   console.log("Criando usuarios para teste...");

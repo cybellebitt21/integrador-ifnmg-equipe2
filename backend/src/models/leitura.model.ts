@@ -15,28 +15,28 @@ export const LeituraModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.leitura.findUnique({
       where: { id },
       include: { plantacao: { select: { id: true, nome: true } } },
     });
   },
 
-  async buscarUltima(plantacao_id: number) {
+  async buscarUltima(plantacao_id: string) {
     return await prisma.leitura.findFirst({
       where: { plantacao_id },
       orderBy: { data_hora: 'desc' },
     });
   },
 
-  async atualizar(id: number, data: Prisma.LeituraUpdateInput) {
+  async atualizar(id: string, data: Prisma.LeituraUpdateInput) {
     return await prisma.leitura.update({
       where: { id },
       data,
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.leitura.delete({ where: { id } });
   },
 };

@@ -1,21 +1,25 @@
+import bcrypt from "bcryptjs";
 import prisma from "../src/lib/prisma.js";
 import { tipoSensor, statusSensor, tipoDispositivo, statusDispositivo, tipoAlerta } from "@prisma/client";
 
 async function main() {
   console.log("🌱 Iniciando o seeding do banco de dados...");
 
+  await prisma.alerta.deleteMany();
+  await prisma.leitura.deleteMany();
+  await prisma.plantacaoSensor.deleteMany();
+
   await prisma.usuario.deleteMany();
   await prisma.dispositivo.deleteMany();
   await prisma.sensor.deleteMany();
 
-  await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
   console.log("🧹 Banco de dados e contadores AUTOINCREMENT limpos.");
 
   const usuario = await prisma.usuario.create({
     data: {
       nome: "Francisco de Assis",
       email: "francisco.aracuai@ifnmg.edu.br",
-      senha: "senha_receba",
+      senha: bcrypt.hashSync("senha_receba", 10),
       telefone: "38999998888",
     },
   });

@@ -4,8 +4,8 @@ import { SensorModel } from '../models/sensor.model.js';
 import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarPlantacaoSensorDados {
-  plantacao_id: number;
-  sensor_id: number;
+  plantacao_id: string;
+  sensor_id: string;
   limite_atencao: number;
   limite_critico: number;
 }
@@ -36,15 +36,15 @@ export const PlantacaoSensorService = {
     return resultado;
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await findOrThrow(PlantacaoSensorModel, id, 'associação plantação-sensor', true);
   },
 
-  async buscarPorPlantacao(plantacao_id: number) {
+  async buscarPorPlantacao(plantacao_id: string) {
     return await PlantacaoSensorModel.buscarPorPlantacao(plantacao_id);
   },
 
-  async buscarPorSensor(sensor_id: number) {
+  async buscarPorSensor(sensor_id: string) {
     const plantacaoSensor = await PlantacaoSensorModel.buscarPorSensor(sensor_id);
     if (!plantacaoSensor) {
       throw new Error(`Sensor ${sensor_id} não está vinculado a nenhuma plantação.`);
@@ -52,19 +52,19 @@ export const PlantacaoSensorService = {
     return plantacaoSensor;
   },
 
-  async atualizar(id: number, dados: AtualizarPlantacaoSensorDados) {
+  async atualizar(id: string, dados: AtualizarPlantacaoSensorDados) {
     await PlantacaoSensorService.buscarPorId(id);
     return await PlantacaoSensorModel.atualizar(id, dados);
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     const vinculo = await PlantacaoSensorService.buscarPorId(id);
     await PlantacaoSensorModel.deletar(id);
     await SensorModel.atualizar(vinculo.sensor_id, { status: statusSensor.Inativo });
     return { mensagem: 'Associação plantação-sensor removida com sucesso.' };
   },
 
-  async deletarPorPlantacao(plantacao_id: number) {
+  async deletarPorPlantacao(plantacao_id: string) {
     const sensores = await PlantacaoSensorModel.buscarPorPlantacao(plantacao_id);
     if (sensores.length === 0) {
       throw new Error(`Nenhum sensor vinculado à plantação ${plantacao_id}.`);

@@ -8,7 +8,7 @@ export const UsuarioModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.usuario.findUnique({
       where: { id },
       select: {
@@ -46,7 +46,7 @@ export const UsuarioModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.UsuarioUpdateInput) {
+  async atualizar(id: string, data: Prisma.UsuarioUpdateInput) {
     return await prisma.usuario.update({
       where: { id },
       data,
@@ -60,7 +60,7 @@ export const UsuarioModel = {
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.usuario.delete({
       where: { id },
     });

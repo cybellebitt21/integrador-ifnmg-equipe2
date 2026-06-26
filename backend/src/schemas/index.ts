@@ -19,8 +19,8 @@ export const criarDispositivoSchema = z.object({
 export const atualizarDispositivoSchema = criarDispositivoSchema.partial();
 
 export const criarPlantacaoSchema = z.object({
-  usuario_id: z.number(),
-  dispositivo_id: z.number(),
+  usuario_id: z.uuid(),
+  dispositivo_id: z.uuid(),
   nome: z.string(),
   tipo: z.string(),
   data_inicio: z.coerce.date(),
@@ -41,8 +41,8 @@ export const criarSensorSchema = z.object({
 export const atualizarSensorSchema = criarSensorSchema.partial();
 
 export const criarPlantacaoSensorSchema = z.object({
-  plantacao_id: z.number(),
-  sensor_id: z.number(),
+  plantacao_id: z.uuid(),
+  sensor_id: z.uuid(),
   limite_atencao: z.number().positive('Limite de atenção deve ser positivo'),
   limite_critico: z.number().positive('Limite crítico deve ser positivo'),
 });
@@ -50,7 +50,7 @@ export const criarPlantacaoSensorSchema = z.object({
 export const atualizarPlantacaoSensorSchema = criarPlantacaoSensorSchema.partial();
 
 export const criarLeituraSchema = z.object({
-  plantacao_id: z.number().optional(),
+  plantacao_id: z.uuid().optional(),
   umidade_solo: z.number().optional(),
   umidade_ar: z.number().optional(),
   temperatura: z.number().optional(),
@@ -60,9 +60,9 @@ export const criarLeituraSchema = z.object({
 export const atualizarLeituraSchema = criarLeituraSchema.partial();
 
 export const criarAlertaSchema = z.object({
-  leitura_id: z.number(),
-  usuario_id: z.number(),
-  plantacao_id: z.number(),
+  leitura_id: z.uuid(),
+  usuario_id: z.uuid(),
+  plantacao_id: z.uuid(),
   tipo: z.enum(tipoAlerta),
   mensagem: z.string(),
   notificacao: z.boolean().optional(),

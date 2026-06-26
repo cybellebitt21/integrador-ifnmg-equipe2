@@ -8,7 +8,7 @@ import { findOrThrow } from '../utils/find-or-throw.js';
 type CamposLeitura = Pick<Prisma.LeituraCreateInput, 'temperatura' | 'umidade_ar' | 'umidade_solo' | 'luminosidade'>;
 
 interface CriarLeituraDados extends CamposLeitura {
-  plantacao_id?: number;
+  plantacao_id?: string;
 }
 
 const TIPO_PARA_CAMPO: Record<tipoSensor, keyof CamposLeitura> = {
@@ -36,11 +36,10 @@ export const LeituraService = {
     return resultados;
   },
 
-  async _criarParaPlantacao(plantacao_id: number, payload: CriarLeituraDados) {
+  async _criarParaPlantacao(plantacao_id: string, payload: CriarLeituraDados) {
     const vinculos = await PlantacaoSensorModel.buscarPorPlantacao(plantacao_id);
 
     const dadosFiltrados: Record<string, number | undefined | null> = {
-      plantacao_id,
       temperatura: undefined,
       umidade_ar: undefined,
       umidade_solo: undefined,
@@ -56,10 +55,7 @@ export const LeituraService = {
 
     const resultado = await LeituraModel.criar({
       plantacao_id,
-      temperatura: dadosFiltrados.temperatura ?? null,
-      umidade_ar: dadosFiltrados.umidade_ar ?? null,
-      umidade_solo: dadosFiltrados.umidade_solo ?? null,
-      luminosidade: dadosFiltrados.luminosidade ?? null,
+      ...dadosFiltrados,
     });
 
     await AlertaService.gerarAlertasParaLeitura(resultado.id, plantacao_id);
@@ -71,11 +67,11 @@ export const LeituraService = {
     return await LeituraModel.buscarTodos();
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await findOrThrow(LeituraModel, id, 'leitura', true);
   },
 
-  async obterDadosDashboard(plantacao_id: number) {
+  async obterDadosDashboard(plantacao_id: string) {
     const dados = await LeituraModel.buscarUltima(plantacao_id);
     if (!dados) {
       throw new Error('Nenhuma leitura encontrada para esta plantação.');
@@ -83,12 +79,12 @@ export const LeituraService = {
     return dados;
   },
 
-  async atualizar(id: number, dados: Prisma.LeituraUpdateInput) {
+  async atualizar(id: string, dados: Prisma.LeituraUpdateInput) {
     await LeituraService.buscarPorId(id);
     return await LeituraModel.atualizar(id, dados);
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     await LeituraService.buscarPorId(id);
     await LeituraModel.deletar(id);
     return { mensagem: 'Leitura removida com sucesso.' };
