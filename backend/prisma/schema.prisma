@@ -14,7 +14,7 @@ model Usuario {
   nome      String
   email     String   @unique
   senha     String
-  telefone  String
+  telefone  String   @unique
   criado_em DateTime @default(now())
 
   plantacoes Plantacao[]
