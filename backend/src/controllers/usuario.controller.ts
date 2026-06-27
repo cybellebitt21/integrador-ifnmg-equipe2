@@ -1,80 +1,45 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { UsuarioService } from '../services/usuario.service.js';
+import { parseId } from '../utils/parse-id.js';
 
 export const UsuarioController = {
-  async criar(req: Request, res: Response) {
-    try {
-      const novoUsuario = await UsuarioService.criar(req.body);
-
-      return res.status(201).json({ // 201 Created
-        mensagem: 'Usuário cadastrado com sucesso.',
-        dados: novoUsuario,
-      });
-    }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message }); // 400 Bad Request
-    }
+  async criar(req: Request, res: Response, _next: NextFunction) {
+    const novoUsuario = await UsuarioService.criar(req.body);
+    return res.status(201).json({
+      mensagem: 'Usuário cadastrado com sucesso.',
+      dados: novoUsuario,
+    });
   },
 
-  async buscarPorId(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador fornecido na URL precisa ser um número válido.' });
-      }
-
-      const usuario = await UsuarioService.buscarPorId(id);
-      return res.status(200).json(usuario); // 200 Ok
-    }
-    catch (error: any) {
-      return res.status(404).json({ erro: error.message }); // 404 Not Found
-    }
+  async buscarPorId(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    const usuario = await UsuarioService.buscarPorId(id);
+    return res.status(200).json(usuario);
   },
 
-  async buscarTodos(_req: Request, res: Response) {
-    try {
-      const usuarios = await UsuarioService.buscarTodos();
-      return res.status(200).json(usuarios);
-    }
-    catch (error: any) {
-      return res.status(500).json({ erro: error.message }); // 500 Internal Server Error
-    }
+  async buscarTodos(_req: Request, res: Response, _next: NextFunction) {
+    const usuarios = await UsuarioService.buscarTodos();
+    return res.status(200).json(usuarios);
   },
 
-  async atualizar(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador fornecido na URL precisa ser um número válido.' });
-      }
-
-      const usuarioAtualizado = await UsuarioService.atualizar(id, req.body);
-
-      return res.status(200).json({
-        mensagem: 'Os dados do usuário foram atualizados com sucesso.',
-        dados: usuarioAtualizado,
-      });
+  async atualizar(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    if (req.usuario?.id !== id) {
+      return res.status(403).json({ erro: 'Você não tem permissão para alterar este usuário.' });
     }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+    const usuarioAtualizado = await UsuarioService.atualizar(id, req.body);
+    return res.status(200).json({
+      mensagem: 'Os dados do usuário foram atualizados com sucesso.',
+      dados: usuarioAtualizado,
+    });
   },
 
-  async deletar(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador fornecido na URL precisa ser um número válido.' });
-      }
-
-      const resultado = await UsuarioService.deletar(id);
-      return res.status(200).json(resultado);
+  async deletar(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    if (req.usuario?.id !== id) {
+      return res.status(403).json({ erro: 'Você não tem permissão para deletar este usuário.' });
     }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+    const resultado = await UsuarioService.deletar(id);
+    return res.status(200).json(resultado);
   },
 };

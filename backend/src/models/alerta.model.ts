@@ -8,20 +8,20 @@ export const AlertaModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.alerta.findUnique({
       where: { id },
     });
   },
 
-  async buscarPorPlantacao(plantacao_id: number) {
+  async buscarPorPlantacao(plantacao_id: string) {
     return await prisma.alerta.findMany({
       where: { plantacao_id },
       orderBy: { gerado_em: 'desc' },
     });
   },
 
-  async buscarPorUsuario(usuario_id: number) {
+  async buscarPorUsuario(usuario_id: string) {
     return await prisma.alerta.findMany({
       where: { usuario_id },
       orderBy: { gerado_em: 'desc' },
@@ -34,7 +34,7 @@ export const AlertaModel = {
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.alerta.delete({
       where: { id },
     });

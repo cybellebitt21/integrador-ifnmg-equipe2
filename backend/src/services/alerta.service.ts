@@ -1,13 +1,14 @@
 import { tipoAlerta, tipoSensor } from '@prisma/client';
-import { AlertaModel } from '../models/Alerta.model.js';
-import { LeituraModel } from '../models/Leitura.model.js';
-import { PlantacaoModel } from '../models/Plantacao.model.js';
-import { PlantacaoSensorModel } from '../models/PlantacaoSensor.model.js';
+import { AlertaModel } from '../models/alerta.model.js';
+import { LeituraModel } from '../models/leitura.model.js';
+import { PlantacaoModel } from '../models/plantacao.model.js';
+import { PlantacaoSensorModel } from '../models/plantacao-sensor.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarAlertaDados {
-  leitura_id: number;
-  usuario_id: number;
-  plantacao_id: number;
+  leitura_id: string;
+  usuario_id: string;
+  plantacao_id: string;
   tipo: tipoAlerta;
   mensagem: string;
   notificacao?: boolean;
@@ -39,19 +40,15 @@ export const AlertaService = {
     return await AlertaModel.criar(alertaDados);
   },
 
-  async buscarPorId(id: number) {
-    const alerta = await AlertaModel.buscarPorId(id);
-    if (!alerta) {
-      throw new Error(`Nenhum alerta encontrado com o identificador ${id}.`);
-    }
-    return alerta;
+  async buscarPorId(id: string) {
+    return await findOrThrow(AlertaModel, id, 'alerta');
   },
 
-  async buscarPorPlantacao(plantacao_id: number) {
+  async buscarPorPlantacao(plantacao_id: string) {
     return await AlertaModel.buscarPorPlantacao(plantacao_id);
   },
 
-  async buscarPorUsuario(usuario_id: number) {
+  async buscarPorUsuario(usuario_id: string) {
     return await AlertaModel.buscarPorUsuario(usuario_id);
   },
 
@@ -59,13 +56,13 @@ export const AlertaService = {
     return await AlertaModel.buscarTodos();
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     await AlertaService.buscarPorId(id);
     await AlertaModel.deletar(id);
     return { mensagem: 'Alerta removido com sucesso.' };
   },
 
-  async gerarAlertasParaLeitura(leitura_id: number, plantacao_id: number) {
+  async gerarAlertasParaLeitura(leitura_id: string, plantacao_id: string) {
     const [leitura, plantacao, vinculos] = await Promise.all([
       LeituraModel.buscarPorId(leitura_id),
       PlantacaoModel.buscarPorId(plantacao_id),

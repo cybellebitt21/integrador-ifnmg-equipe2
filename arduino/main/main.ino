@@ -26,12 +26,6 @@ void loop() {
   unsigned int leitura_solo = analogRead(SOLO_SENSOR);
   unsigned int umidade_solo = map(leitura_solo, 1023, 0, 0, 100);
 
-  if (isnan(umidade_ar) || isnan(temperatura)) {
-    umidade_ar = 0;
-    temperatura = 0;
-  }
-
-  // Saída para o gateway
   Serial.print(umidade_solo);
   Serial.print(F(","));
   Serial.print(umidade_ar);

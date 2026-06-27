@@ -1,42 +1,32 @@
-import { UsuarioModel } from "../models/Usuario.model.js";
-
-interface CriarUsuarioDados {
-  nome: string;
-  email: string;
-  senha: string;
-  telefone: string;
-}
-
-interface AtualizarUsuarioDados {
-  nome?: string;
-  email?: string;
-  senha?: string;
-  telefone?: string;
-}
+import bcrypt from 'bcryptjs';
+import { Prisma } from '@prisma/client';
+import { UsuarioModel } from "../models/usuario.model.js";
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 export const UsuarioService = {
-  async criar(dados: CriarUsuarioDados) {
+  async criar(dados: Prisma.UsuarioCreateInput) {
     const usuarioExistente = await UsuarioModel.buscarPorEmail(dados.email);
     if (usuarioExistente) {
       throw new Error('O endereço de e-mail já está sendo usado por outro usuário.')
     }
 
-    return await UsuarioModel.criar(dados);
+    const dadosComHash = {
+      ...dados,
+      senha: await bcrypt.hash(dados.senha, 10)
+    }
+
+    return await UsuarioModel.criar(dadosComHash);
   },
 
-  async buscarPorId(id: number) {
-    const usuario = await UsuarioModel.buscarPorId(id);
-    if (!usuario) {
-      throw new Error(`Nenhum usuário encontrado com o identificador ${id}.`);
-    }
-    return usuario;
+  async buscarPorId(id: string) {
+    return await findOrThrow(UsuarioModel, id, 'usuário');
   },
 
   async buscarTodos() {
     return await UsuarioModel.buscarTodos();
   },
 
-  async atualizar(id: number, dados: AtualizarUsuarioDados) {
+  async atualizar(id: string, dados: Prisma.UsuarioUpdateInput) {
     await UsuarioService.buscarPorId(id);
 
     if (dados.email && typeof dados.email === 'string') {
@@ -46,10 +36,14 @@ export const UsuarioService = {
       }
     }
 
+    if (dados.senha && typeof dados.senha === 'string') {
+      dados.senha = await bcrypt.hash(dados.senha, 10);
+    }
+
     return await UsuarioModel.atualizar(id, dados);
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     await UsuarioService.buscarPorId(id);
 
     await UsuarioModel.deletar(id);

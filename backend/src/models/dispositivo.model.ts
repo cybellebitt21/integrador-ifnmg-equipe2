@@ -8,7 +8,7 @@ export const DispositivoModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.dispositivo.findUnique({
       where: { id },
       include: {
@@ -35,14 +35,14 @@ export const DispositivoModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.DispositivoUpdateInput) {
+  async atualizar(id: string, data: Prisma.DispositivoUpdateInput) {
     return await prisma.dispositivo.update({
       where: { id },
       data,
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.dispositivo.delete({
       where: { id },
     });

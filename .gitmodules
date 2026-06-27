@@ -1,0 +1,3 @@
+[submodule "bruno/agrosensorAPIControl"]
+	path = bruno/agrosensorAPIControl
+	url = git@github.com:jamsnxs/agrosensorAPIControl.git

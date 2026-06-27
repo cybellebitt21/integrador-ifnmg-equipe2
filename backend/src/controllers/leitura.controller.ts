@@ -1,85 +1,45 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { LeituraService } from '../services/leitura.service.js';
+import { parseId } from '../utils/parse-id.js';
 
 export const LeituraController = {
-  async criar(req: Request, res: Response) {
-    try {
-      const leituras = await LeituraService.criar(req.body);
-
-      return res.status(201).json({
-        mensagem: `Dados dos sensores processados para ${leituras.length} plantação(ões).`,
-        dados: leituras,
-      });
-    }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+  async criar(req: Request, res: Response, _next: NextFunction) {
+    const leituras = await LeituraService.criar(req.body);
+    return res.status(201).json({
+      mensagem: `Dados dos sensores processados para ${leituras.length} plantação(ões).`,
+      dados: leituras,
+    });
   },
 
-  async buscarTodos(_req: Request, res: Response) {
-    try {
-      const leituras = await LeituraService.buscarTodos();
-      return res.status(200).json(leituras);
-    }
-    catch (error: any) {
-      return res.status(500).json({ erro: error.message });
-    }
+  async buscarTodos(_req: Request, res: Response, _next: NextFunction) {
+    const leituras = await LeituraService.buscarTodos();
+    return res.status(200).json(leituras);
   },
 
-  async obterDadosDashboard(req: Request, res: Response) {
-    try {
-      const plantacaoId = Number(req.params.plantacao_id) || 1;
-      const dashboardDados = await LeituraService.obterDadosDashboard(plantacaoId);
-
-      return res.status(200).json(dashboardDados);
-    }
-    catch (error: any) {
-      return res.status(404).json({ erro: error.message });
-    }
+  async obterDadosDashboard(req: Request, res: Response, _next: NextFunction) {
+    const plantacao_id = parseId(req, 'plantacao_id');
+    const dashboardDados = await LeituraService.obterDadosDashboard(plantacao_id);
+    return res.status(200).json(dashboardDados);
   },
 
-  async buscarPorId(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador precisa ser um número válido.' });
-      }
-      const leitura = await LeituraService.buscarPorId(id);
-      return res.status(200).json(leitura);
-    }
-    catch (error: any) {
-      return res.status(404).json({ erro: error.message });
-    }
+  async buscarPorId(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    const leitura = await LeituraService.buscarPorId(id);
+    return res.status(200).json(leitura);
   },
 
-  async atualizar(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador precisa ser um número válido.' });
-      }
-      const leituraAtualizada = await LeituraService.atualizar(id, req.body);
-      return res.status(200).json({
-        mensagem: 'Leitura atualizada com sucesso.',
-        dados: leituraAtualizada,
-      });
-    }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+  async atualizar(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    const leituraAtualizada = await LeituraService.atualizar(id, req.body);
+    return res.status(200).json({
+      mensagem: 'Leitura atualizada com sucesso.',
+      dados: leituraAtualizada,
+    });
   },
 
-  async deletar(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ erro: 'O identificador precisa ser um número válido.' });
-      }
-      const resultado = await LeituraService.deletar(id);
-      return res.status(200).json(resultado);
-    }
-    catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+  async deletar(req: Request, res: Response, _next: NextFunction) {
+    const id = parseId(req);
+    const resultado = await LeituraService.deletar(id);
+    return res.status(200).json(resultado);
   },
 };

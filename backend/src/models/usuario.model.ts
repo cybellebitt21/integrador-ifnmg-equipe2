@@ -8,13 +8,33 @@ export const UsuarioModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.usuario.findUnique({
       where: { id },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
     });
   },
 
   async buscarPorEmail(email: string) {
+    return await prisma.usuario.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
+    });
+  },
+
+  async buscarPorEmailComSenha(email: string) {
     return await prisma.usuario.findUnique({
       where: { email },
     });
@@ -32,14 +52,21 @@ export const UsuarioModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.UsuarioUpdateInput) {
+  async atualizar(id: string, data: Prisma.UsuarioUpdateInput) {
     return await prisma.usuario.update({
       where: { id },
       data,
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        criado_em: true,
+      },
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.usuario.delete({
       where: { id },
     });

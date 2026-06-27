@@ -1,10 +1,11 @@
 import { statusDispositivo } from '@prisma/client';
-import { PlantacaoModel } from '../models/Plantacao.model.js';
-import { DispositivoModel } from '../models/Dispositivo.model.js';
+import { PlantacaoModel } from '../models/plantacao.model.js';
+import { DispositivoModel } from '../models/dispositivo.model.js';
+import { findOrThrow } from '../utils/find-or-throw.js';
 
 interface CriarPlantacaoDados {
-  usuario_id: number;
-  dispositivo_id: number;
+  usuario_id: string;
+  dispositivo_id: string;
   nome: string;
   tipo: string;
   data_inicio: Date;
@@ -42,28 +43,24 @@ export const PlantacaoService = {
     return resultado;
   },
 
-  async buscarPorId(id: number) {
-    const plantacao = await PlantacaoModel.buscarPorId(id);
-    if (!plantacao) {
-      throw new Error(`Nenhuma plantação encontrada com o identificador ${id}.`);
-    }
-    return plantacao;
+  async buscarPorId(id: string) {
+    return await findOrThrow(PlantacaoModel, id, 'plantação', true);
   },
 
   async buscarTodos() {
     return await PlantacaoModel.buscarTodos();
   },
 
-  async buscarPorUsuario(usuario_id: number) {
+  async buscarPorUsuario(usuario_id: string) {
     return await PlantacaoModel.buscarPorUsuario(usuario_id);
   },
 
-  async atualizar(id: number, dados: AtualizarPlantacaoDados) {
+  async atualizar(id: string, dados: AtualizarPlantacaoDados) {
     await PlantacaoService.buscarPorId(id);
     return await PlantacaoModel.atualizar(id, dados);
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     const plantacao = await PlantacaoService.buscarPorId(id);
     await PlantacaoModel.deletar(id);
     await DispositivoModel.atualizar(plantacao.dispositivo_id, { status: statusDispositivo.Inativo });

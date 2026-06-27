@@ -28,7 +28,7 @@ parser.on('data', async (linha) => {
   const dadosSegmentados = linha.trim().split(',');
 
   if (dadosSegmentados.length !== 4) {
-    console.warn(`Esperado 4 colunas, recebido: ${dadosSegmentados.length}).`);
+    console.warn(`Esperado 4 colunas, recebido: ${dadosSegmentados.length}.`);
     return;
   }
 
@@ -62,8 +62,8 @@ parser.on('data', async (linha) => {
     });
 
     if (!resposta.ok) {
-      const dadosErro = await resposta.json() as Error;
-      console.error(`O Servidor rejeitou os dados (Status ${resposta.status}):`, dadosErro.message || 'Erro desconhecido');
+      const dadosErro = await resposta.json() as { erro?: string };
+      console.error(`O Servidor rejeitou os dados (Status ${resposta.status}):`, dadosErro.erro || 'Erro desconhecido');
     } else {
       console.log('Dados processados e salvos no banco SQLite com sucesso.');
     }

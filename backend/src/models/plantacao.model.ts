@@ -16,7 +16,7 @@ export const PlantacaoModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.plantacao.findUnique({
       where: { id },
       include: {
@@ -68,7 +68,7 @@ export const PlantacaoModel = {
     });
   },
 
-  async buscarPorUsuario(usuario_id: number) {
+  async buscarPorUsuario(usuario_id: string) {
     return await prisma.plantacao.findMany({
       where: { usuario_id },
       include: {
@@ -93,7 +93,7 @@ export const PlantacaoModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.PlantacaoUpdateInput) {
+  async atualizar(id: string, data: Prisma.PlantacaoUpdateInput) {
     return await prisma.plantacao.update({
       where: { id },
       data,
@@ -107,7 +107,7 @@ export const PlantacaoModel = {
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.plantacao.delete({
       where: { id },
     });

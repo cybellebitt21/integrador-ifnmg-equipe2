@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import prisma from "../src/lib/prisma.js";
 import { tipoSensor, statusSensor, tipoDispositivo, statusDispositivo, tipoAlerta } from "@prisma/client";
 
@@ -7,115 +8,117 @@ async function main() {
   await prisma.alerta.deleteMany();
   await prisma.leitura.deleteMany();
   await prisma.plantacaoSensor.deleteMany();
-  await prisma.sensor.deleteMany();
-  await prisma.plantacao.deleteMany();
-  await prisma.dispositivo.deleteMany();
+
   await prisma.usuario.deleteMany();
+  await prisma.dispositivo.deleteMany();
+  await prisma.sensor.deleteMany();
 
-  await prisma.$executeRawUnsafe(`DELETE FROM sqlite_sequence;`);
-  console.log("🧹 Banco de dados e contadores AUTOINCREMENT limpos.");
+  console.log("🧹 Banco de dados limpo.");
 
-  const usuario = await prisma.usuario.create({
+  const user1 = await prisma.usuario.create({
     data: {
-      nome: "Francisco de Assis",
-      email: "francisco.aracuai@ifnmg.edu.br",
-      senha: "senha_receba",
-      telefone: "38999998888",
+      nome: "Carolaine Gamer",
+      email: "carolaine@agro.po",
+      senha: bcrypt.hashSync("senhaSuperSegura123", 10),
+      telefone: "3395785902",
     },
   });
 
-  const sUmidadeSolo01 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 01", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Ativo } });
-  const sUmidadeSolo02 = await prisma.sensor.create({ data: { nome: "Higrômetro de Solo - Item 02", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Ativo } });
-  const sTemperatura01 = await prisma.sensor.create({ data: { nome: "DHT22 - Temperatura - Item 01", tipo: tipoSensor.temperatura, unidade: "°C", status: statusSensor.Ativo } });
-  const sUmidadeAr01 = await prisma.sensor.create({ data: { nome: "DHT22 - Umidade Ar - Item 01", tipo: tipoSensor.umidade_ar, unidade: "%", status: statusSensor.Ativo } });
-  const sLuminosidade01 = await prisma.sensor.create({ data: { nome: "LDR 5mm - Item 01", tipo: tipoSensor.luminosidade, unidade: "%", status: statusSensor.Ativo } });
-
-  const disp01 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit A", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
-  const disp02 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit B", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
-  const disp03 = await prisma.dispositivo.create({ data: { nome: "Arduino Mega - Kit C", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo } });
-  const disp04 = await prisma.dispositivo.create({ data: { nome: "ESP32 NodeMCU - Protótipo", tipo: tipoDispositivo.ESP32, status: statusDispositivo.Ativo } });
-
-  console.log("Catálogo de sensores e estoque de dispositivos criados.");
-
-  const plantacaoMonitorada = await prisma.plantacao.create({
+  const user2 = await prisma.usuario.create({
     data: {
-      usuario_id: usuario.id,
-      dispositivo_id: disp01.id, // Vinculado obrigatoriamente ao Kit A
-      nome: "Lote B - Cereja",
-      tipo: "Fruticultura",
-      data_inicio: new Date("2026-02-10T08:00:00Z"),
-      descricao: "Área experimental de cultivo monitorada por IoT no semiárido.",
+      nome: "Cybelle Gamer",
+      email: "cybelle@agro.tester",
+      senha: bcrypt.hashSync("senhaNadaSegura321", 10),
+      telefone: "3399039177",
+    },
+  });
+
+  const sTemp = await prisma.sensor.create({
+    data: { nome: "DHT22 - Sensor de Temperatura", tipo: tipoSensor.temperatura, unidade: "°C", status: statusSensor.Ativo },
+  });
+
+  const sSolo = await prisma.sensor.create({
+    data: { nome: "HL-69 - Sensor de Umidade do solo", tipo: tipoSensor.umidade_solo, unidade: "%", status: statusSensor.Inativo },
+  });
+
+  const sAr = await prisma.sensor.create({
+    data: { nome: "DHT22 - Sensor de Umidade do Ar", tipo: tipoSensor.umidade_ar, unidade: "%", status: statusSensor.Inativo },
+  });
+
+  const sLuz = await prisma.sensor.create({
+    data: { nome: "LDR 8MM - Sensor de luz", tipo: tipoSensor.luminosidade, unidade: "%", status: statusSensor.Ativo },
+  });
+
+  const disp01 = await prisma.dispositivo.create({
+    data: { nome: "Arduino Mega 2560", tipo: tipoDispositivo.Arduino_Mega, status: statusDispositivo.Ativo },
+  });
+
+  const disp02 = await prisma.dispositivo.create({
+    data: { nome: "Arduino Uno R3", tipo: tipoDispositivo.Arduino_Uno, status: statusDispositivo.Ativo },
+  });
+
+  console.log("Catálogo de sensores e dispositivos criados.");
+
+  const plantacao1 = await prisma.plantacao.create({
+    data: {
+      usuario_id: user1.id,
+      dispositivo_id: disp01.id,
+      nome: "Lote B - Weed",
+      tipo: "Herbácea",
+      data_inicio: new Date("2026-06-01T10:00:00Z"),
+      descricao: "Maconha da boa",
     },
   });
 
   await prisma.plantacaoSensor.create({
     data: {
-      plantacao_id: plantacaoMonitorada.id,
-      sensor_id: sUmidadeSolo01.id, // Exclusivo do Lote B
-      limite_atencao: 40.0,
-      limite_critico: 20.0,
+      plantacao_id: plantacao1.id,
+      sensor_id: sLuz.id,
+      limite_atencao: 25.0,
+      limite_critico: 10.0,
     },
   });
 
-  await prisma.plantacaoSensor.create({
+  const plantacao2 = await prisma.plantacao.create({
     data: {
-      plantacao_id: plantacaoMonitorada.id,
-      sensor_id: sTemperatura01.id, // Exclusivo do Lote B
-      limite_atencao: 35.0,
-      limite_critico: 39.0,
-    },
-  });
-
-
-  const segundaPlantacao = await prisma.plantacao.create({
-    data: {
-      usuario_id: usuario.id,
+      usuario_id: user2.id,
       dispositivo_id: disp02.id,
-      nome: "Lote C - Feijão Caupi",
-      tipo: "Subsistência",
-      data_inicio: new Date("2026-05-01T07:00:00Z"),
-      descricao: "Área de monitoramento paralela usando sensores alternativos.",
+      nome: "Lote A - Cereja",
+      tipo: "Fruticultura",
+      data_inicio: new Date("2026-05-15T08:00:00Z"),
+      descricao: "Área experimental de cultivo monitorada",
     },
   });
 
-  // Vincula sensores diferentes para o Lote C (Testando a exclusividade e a distribuição)
   await prisma.plantacaoSensor.create({
     data: {
-      plantacao_id: segundaPlantacao.id,
-      sensor_id: sUmidadeSolo02.id, // Higrômetro 02 exclusivo do Lote C
+      plantacao_id: plantacao2.id,
+      sensor_id: sTemp.id,
       limite_atencao: 30.0,
-      limite_critico: 15.0,
+      limite_critico: 35.0,
     },
   });
 
-  await prisma.plantacaoSensor.create({
+  const leitura1 = await prisma.leitura.create({
     data: {
-      plantacao_id: segundaPlantacao.id,
-      sensor_id: sLuminosidade01.id, // LDR exclusivo do Lote C
-      limite_atencao: 50.0,
-      limite_critico: 20.0,
+      plantacao_id: plantacao1.id,
+      luminosidade: 55.0,
+      data_hora: new Date(),
     },
   });
 
-
-  const leituraNormal = await prisma.leitura.create({
+  const leitura2 = await prisma.leitura.create({
     data: {
-      plantacao_id: plantacaoMonitorada.id,
-      umidade_solo: 45.5,
-      temperatura: 26.2,
-      umidade_ar: 62.0,
-      luminosidade: 70.0,
+      plantacao_id: plantacao2.id,
+      temperatura: 28.0,
       data_hora: new Date(),
     },
   });
 
   const leituraCritica = await prisma.leitura.create({
     data: {
-      plantacao_id: plantacaoMonitorada.id,
-      umidade_solo: 42.0,
-      temperatura: 40.2, // Quebrou o limite crítico de 39°C
-      umidade_ar: 55.0,
-      luminosidade: 85.0,
+      plantacao_id: plantacao2.id,
+      temperatura: 36.5,
       data_hora: new Date(),
     },
   });
@@ -123,19 +126,19 @@ async function main() {
   await prisma.alerta.create({
     data: {
       leitura_id: leituraCritica.id,
-      usuario_id: usuario.id,
-      plantacao_id: plantacaoMonitorada.id,
+      usuario_id: user2.id,
+      plantacao_id: plantacao2.id,
       tipo: tipoAlerta.Critico,
-      mensagem: `Alerta Crítico: Temperatura severa detectada: (${leituraCritica.temperatura}°C). Risco de quebra de estresse térmico.`,
+      mensagem: "Alerta Crítico: Temperatura severa detectada: (36.5°C). Risco de quebra de estresse térmico.",
     },
   });
 
-  console.log("✨ Seeding finalizado com sucesso!.");
+  console.log("✨ Seeding finalizado com sucesso.");
 }
 
 main()
   .catch((erro) => {
-    console.error("❌Erro critico detectado durante a execucao do seed:", erro);
+    console.error("❌ Erro crítico durante o seed:", erro);
     process.exit(1);
   })
   .finally(async () => {

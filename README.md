@@ -1,18 +1,30 @@
 # 🌱 AgroSensor
 
-Sistema inteligente de monitoramento climático voltado ao apoio da agricultura familiar no Vale do Jequitinhonha, utilizando IoT, sensores ambientais, gateway serial e visualização de dados em tempo real.
+Sistema inteligente de monitoramento climático voltado ao apoio da
+agricultura familiar no Vale do Jequitinhonha, utilizando IoT,
+sensores ambientais, gateway serial e visualização de dados em tempo
+real.
 
 ---
 
 ## 📌 Sobre o Projeto
 
-O **AgroSensor** é um sistema de monitoramento climático desenvolvido para auxiliar pequenos produtores rurais no acompanhamento das condições ambientais da plantação.
+O **AgroSensor** é um sistema de monitoramento climático desenvolvido
+para auxiliar pequenos produtores rurais no acompanhamento das
+condições ambientais da plantação.
 
-O projeto utiliza sensores conectados a um **Arduino Mega 2560** para coletar dados ambientais em tempo real, transmitindo as informações para um backend responsável pelo processamento, armazenamento e visualização dos dados.
+O projeto utiliza sensores conectados a um **Arduino Mega 2560** para
+coletar dados ambientais em tempo real, transmitindo as informações
+para um backend responsável pelo processamento, armazenamento e
+visualização dos dados.
 
-A proposta foi idealizada considerando os desafios enfrentados pela agricultura familiar no **Vale do Jequitinhonha**, região marcada pelo clima semiárido, altas temperaturas e períodos prolongados de seca.
+A proposta foi idealizada considerando os desafios enfrentados pela
+agricultura familiar no **Vale do Jequitinhonha**, região marcada pelo
+clima semiárido, altas temperaturas e períodos prolongados de seca.
 
-O sistema busca oferecer uma solução acessível e de baixo custo para apoiar o uso racional da água, melhorar o monitoramento agrícola e auxiliar na tomada de decisões relacionadas ao plantio e irrigação.
+O sistema busca oferecer uma solução acessível e de baixo custo para
+apoiar o uso racional da água, melhorar o monitoramento agrícola e
+auxiliar na tomada de decisões relacionadas ao plantio e irrigação.
 
 ---
 
@@ -30,14 +42,15 @@ O sistema busca oferecer uma solução acessível e de baixo custo para apoiar o
 ## Arquitetura do Sistema
 
 ```text
-Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dashboard
+Sensores -> Arduino Mega 2560 -> Gateway Serial -> API REST ->
+Banco de Dados -> Dashboard
 ```
 
 ---
 
 ## ⚙️ Tecnologias Utilizadas
 
-## Hardware
+### Hardware
 
 * Arduino Mega 2560
 * Sensor DHT22 (temperatura e umidade do ar)
@@ -46,7 +59,7 @@ Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dash
 
 ---
 
-## 💻 Software
+### Software
 
 * Node.js
 * Express.js
@@ -75,7 +88,8 @@ Sensores -> Arduino Mega -> Gateway Serial -> API REST -> Banco de Dados -> Dash
 
 ## Modelagem do Banco de Dados
 
-O sistema foi modelado utilizando banco relacional com suporte às seguintes entidades:
+O sistema foi modelado utilizando banco relacional com suporte às
+seguintes entidades:
 
 * Usuários
 * Plantações
@@ -102,7 +116,8 @@ O gateway é responsável por:
 * converter os valores para formato adequado;
 * encaminhar as leituras para a API REST.
 
-Essa arquitetura desacoplada permite maior organização e escalabilidade do sistema.
+Essa arquitetura desacoplada permite maior organização e
+escalabilidade do sistema.
 
 ---
 
@@ -116,19 +131,19 @@ NULL
 
 ## Diagramas do Projeto
 
-## Modelo Conceitual
+### Modelo Conceitual
 
 ![Modelo Conceitual](./documentacao/diagramas/modelo_conceitual.png)
 
 ---
 
-## Modelo Lógico
+### Modelo Lógico
 
 ![Modelo Lógico](./documentacao/diagramas/modelo_logico.png)
 
 ---
 
-## Arquitetura do Sistema
+### Diagrama da Arquitetura
 
 ![Arquitetura do Projeto](./documentacao/diagramas/diagrama_projeto.png)
 
@@ -154,7 +169,7 @@ cd integrador-ifnmg-equipe2
 
 ### Backend
 
-#### Instalar dependências
+#### Instalar dependências do Backend
 
 ```bash
 cd backend
@@ -163,7 +178,7 @@ npm install
 
 ---
 
-### Executar servidor
+#### Executar servidor
 
 ```bash
 npm run dev
@@ -173,7 +188,7 @@ npm run dev
 
 ### Gateway
 
-#### Instalar dependências
+#### Instalar dependências do Gateway
 
 ```bash
 cd gateway
@@ -182,7 +197,7 @@ npm install
 
 ---
 
-### Executar gateway serial
+#### Executar gateway serial
 
 ```bash
 node serial-gateway.js
@@ -190,7 +205,7 @@ node serial-gateway.js
 
 ---
 
-#### Arduino
+### Arduino
 
 Faça upload do arquivo:
 
@@ -217,7 +232,10 @@ para o Arduino Mega 2560 utilizando a IDE do Arduino.
 
 ## 📍 Contexto Regional
 
-O projeto possui foco social e tecnológico voltado ao município de Araçuaí e ao Vale do Jequitinhonha, buscando oferecer soluções acessíveis para agricultura familiar em regiões afetadas pela escassez hídrica.
+O projeto possui foco social e tecnológico voltado ao município de
+Araçuaí e ao Vale do Jequitinhonha, buscando oferecer soluções
+acessíveis para agricultura familiar em regiões afetadas pela
+escassez hídrica.
 
 ---
 

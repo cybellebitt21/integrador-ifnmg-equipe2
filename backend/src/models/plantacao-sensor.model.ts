@@ -11,7 +11,7 @@ export const PlantacaoSensorModel = {
     });
   },
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: string) {
     return await prisma.plantacaoSensor.findUnique({
       where: { id },
       include: {
@@ -21,7 +21,7 @@ export const PlantacaoSensorModel = {
     });
   },
 
-  async buscarPorPlantacao(plantacao_id: number) {
+  async buscarPorPlantacao(plantacao_id: string) {
     return await prisma.plantacaoSensor.findMany({
       where: { plantacao_id },
       include: {
@@ -30,7 +30,7 @@ export const PlantacaoSensorModel = {
     });
   },
 
-  async buscarPorSensor(sensor_id: number) {
+  async buscarPorSensor(sensor_id: string) {
     return await prisma.plantacaoSensor.findUnique({
       where: { sensor_id },
       include: {
@@ -40,7 +40,7 @@ export const PlantacaoSensorModel = {
     });
   },
 
-  async atualizar(id: number, data: Prisma.PlantacaoSensorUpdateInput) {
+  async atualizar(id: string, data: Prisma.PlantacaoSensorUpdateInput) {
     return await prisma.plantacaoSensor.update({
       where: { id },
       data,
@@ -50,13 +50,13 @@ export const PlantacaoSensorModel = {
     });
   },
 
-  async deletar(id: number) {
+  async deletar(id: string) {
     return await prisma.plantacaoSensor.delete({
       where: { id },
     });
   },
 
-  async deletarPorPlantacao(plantacao_id: number) {
+  async deletarPorPlantacao(plantacao_id: string) {
     return await prisma.plantacaoSensor.deleteMany({
       where: { plantacao_id },
     });
