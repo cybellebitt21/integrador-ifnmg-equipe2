@@ -18,7 +18,7 @@ async function main() {
   const user1 = await prisma.usuario.create({
     data: {
       nome: "Carolaine Gamer",
-      email: "carlolaine@agro.po",
+      email: "carolaine@agro.po",
       senha: bcrypt.hashSync("senhaSuperSegura123", 10),
       telefone: "3395785902",
     },
