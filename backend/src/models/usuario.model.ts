@@ -34,6 +34,12 @@ export const UsuarioModel = {
     });
   },
 
+  async buscarPorEmailComSenha(email: string) {
+    return await prisma.usuario.findUnique({
+      where: { email },
+    });
+  },
+
   async buscarTodos() {
     return await prisma.usuario.findMany({
       select: {

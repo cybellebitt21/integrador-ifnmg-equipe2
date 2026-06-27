@@ -3,6 +3,8 @@ import z from 'zod';
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'A string de conexão é obrigatória'),
 
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET precisa ter no mínimo 32 caracteres'),
+
   PORT: z.string().default('3000').transform((val) => {
     const port = parseInt(val, 10);
     if (isNaN(port)) {

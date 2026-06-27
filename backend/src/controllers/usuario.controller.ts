@@ -24,6 +24,9 @@ export const UsuarioController = {
 
   async atualizar(req: Request, res: Response, _next: NextFunction) {
     const id = parseId(req);
+    if (req.usuario?.id !== id) {
+      return res.status(403).json({ erro: 'Você não tem permissão para alterar este usuário.' });
+    }
     const usuarioAtualizado = await UsuarioService.atualizar(id, req.body);
     return res.status(200).json({
       mensagem: 'Os dados do usuário foram atualizados com sucesso.',
@@ -33,6 +36,9 @@ export const UsuarioController = {
 
   async deletar(req: Request, res: Response, _next: NextFunction) {
     const id = parseId(req);
+    if (req.usuario?.id !== id) {
+      return res.status(403).json({ erro: 'Você não tem permissão para deletar este usuário.' });
+    }
     const resultado = await UsuarioService.deletar(id);
     return res.status(200).json(resultado);
   },
