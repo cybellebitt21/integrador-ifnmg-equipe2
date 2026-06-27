@@ -4,6 +4,7 @@ import { LeituraModel } from '../models/leitura.model.js';
 import { PlantacaoModel } from '../models/plantacao.model.js';
 import { PlantacaoSensorModel } from '../models/plantacao-sensor.model.js';
 import { findOrThrow } from '../utils/find-or-throw.js';
+import { enviarWhatsApp } from './whatsapp.service.js';
 
 interface CriarAlertaDados {
   leitura_id: string;
@@ -27,15 +28,9 @@ export const AlertaService = {
       tipo: dados.tipo,
       mensagem: dados.mensagem,
       notificacao: dados.notificacao ?? false,
-      leitura: {
-        connect: { id: dados.leitura_id },
-      },
-      usuario: {
-        connect: { id: dados.usuario_id },
-      },
-      plantacao: {
-        connect: { id: dados.plantacao_id },
-      },
+      leitura: { connect: { id: dados.leitura_id } },
+      usuario: { connect: { id: dados.usuario_id } },
+      plantacao: { connect: { id: dados.plantacao_id } },
     };
     return await AlertaModel.criar(alertaDados);
   },
@@ -99,6 +94,7 @@ export const AlertaService = {
           mensagem: `Alerta Crítico: ${vinculo.sensor.nome} atingiu ${valor}. Limite crítico: ${vinculo.limite_critico}.`,
         });
         alertasCriados.push(alerta);
+        enviarWhatsApp(alerta.mensagem).catch(erro => console.error('WhatsApp error:', erro));
       } else if (excedeuAtencao) {
         const alerta = await AlertaService.criar({
           leitura_id,
@@ -108,6 +104,7 @@ export const AlertaService = {
           mensagem: `Alerta de Atenção: ${vinculo.sensor.nome} atingiu ${valor}. Limite de atenção: ${vinculo.limite_atencao}.`,
         });
         alertasCriados.push(alerta);
+        enviarWhatsApp(alerta.mensagem).catch(erro => console.error('WhatsApp error:', erro));
       }
     }
 
