@@ -5,6 +5,9 @@ const envSchema = z.object({
 
   JWT_SECRET: z.string().min(32, 'JWT_SECRET precisa ter no mínimo 32 caracteres'),
 
+  CALLMEBOT_PHONE: z.string().min(10, 'O telefone precisa ter no mínimo 10 caracteres (incluindo DDI e DDD)'),
+  CALLMEBOT_APIKEY: z.string().min(7, 'A API KEY precisa conter no mínimo 7 caracteres'),
+
   PORT: z.string().default('3000').transform((val) => {
     const port = parseInt(val, 10);
     if (isNaN(port)) {
